@@ -12,10 +12,13 @@ function pickSlice() {
     const slice = WHEEL_SLICES[index] || {};
     return {
         index,
+        ...slice,   // ← hoiab alles color + icon
         color: slice.color || '#ffd28a',
-        label: slice.label || (slice.color || '#ffd28a')
+        label: slice.label || 'Võit'
     };
 }
+
+
 
 function cubicOut(t) {
     return 1 - Math.pow(1 - t, 3);

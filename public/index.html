@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="et">
+
+<head>
+    <!-- ───────────────────────────────────────────────────────────
+       Document Metadata
+  ─────────────────────────────────────────────────────────── -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Õnneratas • Premium Edition</title>
+    <meta name="description"
+        content="Õnneratas Premium Edition — iga päev üks tasuta keerutus ja pidulik võitude ajalugu." />
+    <meta name="theme-color" content="#0b0f1a" id="themeColor" />
+
+    <!-- iOS PWA -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes"> <!-- fallback vanematele iOS versioonidele -->
+
+
+    <!-- ───────────────────────────────────────────────────────────
+       CSS (order matters): polyfill → icons → app styles
+  ─────────────────────────────────────────────────────────── -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dialog-polyfill@0.5.6/dist/dialog-polyfill.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <noscript>
+        <!-- Accessibility: helpful message if JS is disabled -->
+        <div style="padding:12px; background:#300; color:#fff; text-align:center;">
+            JavaScript on required for this app to run. Please enable JavaScript.
+        </div>
+    </noscript>
+
+    <div class="app">
+        <!-- ─────────────────────────────────────────────────────────
+         Top Bar
+    ───────────────────────────────────────────────────────── -->
+        <header class="topbar">
+            <div class="brand" aria-label="Õnneratas bränd">
+                <span class="spark" aria-hidden="true">✦</span>
+                <span class="title" aria-hidden="true">ABIKAASA ÕNNERATAS</span>
+                <span class="spark" aria-hidden="true">✦</span>
+            </div>
+
+            <div class="top-actions">
+                <!-- Buttons expose data attributes for dialog handling -->
+                <button id="loginBtn" class="ghost" type="button" aria-label="Logi sisse" data-open-dialog="loginModal">
+                    <i class="fa fa-user" aria-hidden="true"></i>
+                </button>
+                <button id="infoBtn" class="ghost" type="button" aria-label="Info" data-open-dialog="info">
+                    i
+                </button>
+            </div>
+        </header>
+
+        <!-- ─────────────────────────────────────────────────────────
+         Main Stage
+    ───────────────────────────────────────────────────────── -->
+        <main class="stage">
+            <!-- Wheel -->
+            <div class="wheel-wrap" aria-live="polite">
+                <div id="rotor" class="rotor">
+                    <canvas id="wheel" aria-label="Õnneratas"></canvas>
+                    <ul class="bulbs" id="bulbs" aria-hidden="true"></ul>
+                </div>
+
+                <!-- Axle + Spin CTA -->
+                <div class="axle" aria-hidden="true">
+                    <button id="spinBtn" class="spin-btn" type="button">
+                        <span id="freeSpinTag" class="spin-sub" hidden>START</span>
+                    </button>
+                </div>
+
+                <!-- Pointer (visual indicator only) -->
+                <div class="pointer" aria-hidden="true"></div>
+            </div>
+
+            <!-- Auth modal (login + sign up) -->
+            <dialog id="loginModal" class="modal">
+                <div class="modal-card">
+                    <header>
+                        <h3>Logi sisse</h3>
+                    </header>
+
+                    <div class="modal-body">
+                        <!-- LOGIN -->
+                        <form id="loginForm" class="login-form auth-pane" data-pane="login" novalidate>
+                            <div class="free-card login-fields">
+                                <!-- E-post -->
+                                <div class="field">
+                                    <label for="loginEmail" class="sr-only">E-post</label>
+                                    <div class="input-wrap">
+                                        <i class="fa-solid fa-envelope icon-left" aria-hidden="true"></i>
+                                        <input id="loginEmail" type="email" placeholder="E-post" autocomplete="email"
+                                            required>
+                                        <div id="loginEmailErr" class="error-msg" aria-live="polite"></div>
+                                    </div>
+                                </div>
+                                <!-- Parool -->
+                                <div class="field">
+                                    <label for="loginPass" class="sr-only">Parool</label>
+                                    <div class="input-wrap">
+                                        <i class="fa-solid fa-lock icon-left" aria-hidden="true"></i>
+                                        <input id="loginPass" type="password" placeholder="Parool"
+                                            autocomplete="current-password" required>
+
+                                        <div id="loginPassErr" class="error-msg" aria-live="polite"></div>
+                                    </div>
+                                </div>
+                                <div class="aux-row">
+                                    <a href="#" id="forgotLink" class="muted small">Unustasid parooli?</a>
+                                </div>
+
+                            </div>
+
+                            <footer class="login-actions">
+                                <button type="submit" id="loginSubmitBtn" class="primary">Logi sisse</button>
+                            </footer>
+
+                            <!-- LINK: Loo konto -->
+                            <p class="auth-switch small muted">
+
+                                <a href="#" id="toSignupLink">Loo konto</a>
+                            </p>
+                        </form>
+
+                        <!-- SIGN UP -->
+                        <form id="signupForm" class="login-form auth-pane hidden" data-pane="signup" novalidate>
+                            <div class="free-card login-fields">
+                                <!-- Nimi (valikuline) -->
+                                <div class="field">
+                                    <label for="suName" class="sr-only">Nimi</label>
+                                    <div class="input-wrap">
+                                        <i class="fa-solid fa-user icon-left" aria-hidden="true"></i>
+                                        <input id="suName" type="text" placeholder="Nimi" autocomplete="name">
+                                    </div>
+                                </div>
+                                <!-- E-post -->
+                                <div class="field">
+                                    <label for="suEmail" class="sr-only">E-post</label>
+                                    <div class="input-wrap">
+                                        <i class="fa-solid fa-envelope icon-left" aria-hidden="true"></i>
+                                        <input id="suEmail" type="email" placeholder="E-post" autocomplete="email"
+                                            required>
+                                        <div id="suEmailErr" class="error-msg" aria-live="polite"></div>
+                                    </div>
+                                </div>
+                                <!-- Parool -->
+                                <div class="field">
+                                    <label for="suPass" class="sr-only">Parool</label>
+                                    <div class="input-wrap">
+                                        <i class="fa-solid fa-lock icon-left" aria-hidden="true"></i>
+                                        <input id="suPass" type="password" placeholder="Parool (min 6 märki)"
+                                            autocomplete="new-password" required>
+
+                                        <div id="suPassErr" class="error-msg" aria-live="polite"></div>
+                                    </div>
+                                </div>
+                                <!-- Kinnitus -->
+                                <div class="field">
+                                    <label for="suPass2" class="sr-only">Kinnita parool</label>
+                                    <div class="input-wrap">
+                                        <i class="fa-solid fa-key icon-left" aria-hidden="true"></i>
+                                        <input id="suPass2" type="password" placeholder="Kinnita parool"
+                                            autocomplete="new-password" required>
+
+                                        <div id="suPass2Err" class="error-msg" aria-live="polite"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <footer class="login-actions">
+                                <button type="submit" id="signupSubmitBtn" class="primary">Loo konto</button>
+                            </footer>
+
+                            <!-- LINK: tagasi logimisele -->
+                            <p class="auth-switch small muted">
+
+                                <a href="#" id="toLoginLink">Logi sisse</a>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </dialog>
+
+            <!-- Info modal -->
+            <dialog id="info" class="modal">
+                <div class="modal-card">
+                    <header>
+                        <h3>Info</h3>
+                    </header>
+
+                    <div class="modal-body">
+                        <!-- Sama pind/mõõt mis meteril: free-list + free-card -->
+                        <div id="infoList" class="free-list">
+                            <div class="free-card">
+                                <div class="info lbl">
+                                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                                    <div>
+                                        <div class="info-title">Keeruta ratast</div>
+                                        <div class="muted small">Naudi võitu!</div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+
+                    <footer>
+                        <button class="ghost" data-close-dialog="info">Sulge</button>
+                    </footer>
+                </div>
+            </dialog>
+
+
+
+            <!-- Võitude rahakoti modal -->
+            <dialog id="walletModal" class="modal">
+                <div class="modal-card">
+                    <header>
+
+                    </header>
+                    <div class="modal-body">
+                        <div id="walletEmpty" class="muted">Pole veel võite.</div>
+                        <div id="walletList" class="free-list"></div>
+
+                    </div>
+                    <footer>
+                        <button class="ghost" onclick="document.getElementById('walletModal').close()">Sulge</button>
+
+                    </footer>
+                </div>
+            </dialog>
+
+
+            <!-- Secondary Actions -->
+
+            <div class="actions">
+                <button id="myPrizesBtn" class="ghost wallet-cta" type="button" title="View your prize history"
+                    data-open-dialog="walletModal">
+
+                    <span>MINU VÕIDUD</span>
+                    <span id="walletBadge" class="wallet-badge" aria-hidden="true" style="display:none">0</span>
+                </button>
+
+            </div>
+
+
+            <!-- Free Spins Panel -->
+            <section class="meter panel" id="freeMeter" aria-live="polite">
+                <h2 class="meter-title sr-only">Tasuta keerutused</h2>
+                <div id="freeList" class="free-list"></div>
+                <div id="nextFreeInfo" class="meter-row small muted"></div>
+            </section>
+
+            <!-- Confetti Canvas -->
+            <canvas id="confetti" class="confetti" aria-hidden="true"></canvas>
+        </main>
+    </div>
+
+    <!-- ───────────────────────────────────────────────────────────
+       Scripts (deferred, load order top→bottom)
+  ─────────────────────────────────────────────────────────── -->
+    <script src="https://cdn.jsdelivr.net/npm/dialog-polyfill@0.5.6/dist/dialog-polyfill.min.js" defer></script>
+
+    <!-- Core utilities & app structure -->
+    <script type="module" src="scripts/login.js"></script>
+
+
+    <script src="scripts/viewport.js" defer></script>
+    <script src="scripts/dom.js" defer></script>
+    <script src="scripts/constants.js" defer></script>
+    <script src="scripts/storage.js" defer></script>
+    <script src="scripts/time.js" defer></script>
+
+    <!-- UI modules -->
+    <script src="scripts/dialogs.js" defer></script>
+
+
+    <script src="scripts/meter.js" defer></script>
+    <script src="scripts/bulbs.js" defer></script>
+    <script src="scripts/wheel.js" defer></script>
+    <script src="scripts/spin.js" defer></script>
+    <script src="scripts/tick.js" defer></script>
+    <script src="scripts/prize.js" defer></script>
+    <script src="scripts/confetti.js" defer></script>
+    <script src="scripts/wallet.js" defer></script>
+    <script type="module" src="scripts/events.js"></script>
+    <script src="scripts/setup.js" defer></script>
+
+
+
+
+</body>
+
+</html>

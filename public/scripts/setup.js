@@ -4,7 +4,6 @@
 function setup() {
     layoutBulbs();
     drawStaticWheel();
-    renderHistory();
 
     freeSpinTag.hidden = !hasFreeSpin();
     updateMeter();
@@ -46,6 +45,4 @@ setup();
         setTimeout(updateFreeTag, 800); // vajadusel kohanda
     });
 })();
-updateWalletBadge?.(); // et näeks kohe, kui eelmistest seanssidest võite alles
-
 
