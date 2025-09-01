@@ -1,0 +1,513 @@
+/* ─── Teema & mõõdud ─────────────────────────────────────────── */
+:root{
+  --bg:#0b0f1a; --panel:#0f1424cc; --text:#eef2ff; --muted:#a7b1d6;
+  --primary:#ff6f3c; --accent:#ffcf33; --vh:100vh;
+  --radius:18px; --shadow:0 10px 30px rgba(0,0,0,.35);
+
+  /* Vormid */
+  --field-bg:transparent; --field-bd:#ffffff26; --field-bd-hover:#ffffff3a;
+  --field-bd-focus:#ffd28a66; --field-ring:#ffd28a18; --field-placeholder:#a7b1d699;
+  --form-max:340px; --ctrl-h:52px;
+
+  /* Ühtne komponentide disain */
+  --btn-py:10px; --btn-px:14px; --btn-r:14px; --btn-w:800;
+  --btn-shadow:0 8px 20px rgba(255,138,58,.28);
+  --card-r:14px; --card-bg:linear-gradient(180deg,#121a31,#0e152b);
+  --card-bd:1px solid #ffffff26; --card-shadow:0 8px 24px rgba(0,0,0,.32);
+
+  /* Uued muutujad korduste vähendamiseks */
+  --grad-primary: linear-gradient(180deg,#ffd28a,#ff8a3a);
+  --glass-bg: #ffffff12;
+  --glass-bd: #ffffff33;
+  --btn-bd: #ffb96455;
+  --card-hover-shadow: 0 12px 28px rgba(0,0,0,.36), inset 0 0 0 1px #ffffff18;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; color:var(--text);
+  font-family:ui-sans-serif, system-ui, -apple-system,"SF Pro","Inter",Arial;
+  background:
+    radial-gradient(1200px 800px at 50% -20%, #ff7a1a22, transparent 60%),
+    radial-gradient(800px 600px at 30% 120%, #ff3c8a15, transparent 60%),
+    linear-gradient(180deg, #0a0d17, #0e1222 40%, #0b0f1a);
+  min-height:var(--vh);
+}
+
+/* A11y utiliidid */
+.sr-only{
+  position:absolute!important; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+
+/* ─── Üldine paigutus ─────────────────────────────────────────── */
+.app{max-width:420px; margin:0 auto; padding: env(safe-area-inset-top) 16px calc(env(safe-area-inset-bottom) + 16px)}
+.topbar{display:flex; align-items:center; justify-content:space-between; padding:12px 4px 0}
+.top-actions{display:flex; gap:8px; align-items:center}
+.brand{display:flex; gap:10px; align-items:center; letter-spacing:.12em}
+.brand .title{font-weight:800; font-size:14px}
+.brand .spark{opacity:.75}
+.stage{display:flex; flex-direction:column; align-items:center; gap:18px; margin-top:28px}
+.actions{display:flex; gap:8px}
+
+/* ──────────────────────────────────────────────────────────────
+   ÜHTNE KOMPONENDISTIIL: Buttons, Cards, Modals
+────────────────────────────────────────────────────────────── */
+
+/* Buttons: base + variants (katab .arm-btn, .withdraw-btn, button.primary/ghost, modal-nupud, login CTA) */
+.btn,
+button.primary,
+button.ghost,
+.arm-btn,
+.withdraw-btn,
+.modal-card footer .primary,
+.modal-card footer .ghost,
+#loginModal #loginSubmit,
+#loginModal #createAccBtn,
+#walletWithdrawAll.primary{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:var(--btn-py) var(--btn-px);
+  border-radius:var(--btn-r);
+  font-weight:var(--btn-w);
+  letter-spacing:.02em;
+  cursor:pointer; user-select:none;
+  border:1px solid transparent;
+  transition:filter .2s, transform .06s, box-shadow .2s, border-color .2s;
+}
+
+/* Primary (oranž pill) */
+.btn--primary,
+button.primary,
+.arm-btn,
+.withdraw-btn,
+.modal-card footer .primary,
+#loginModal #loginSubmit,
+#walletWithdrawAll.primary{
+  background:var(--grad-primary);
+  color:#3b1300;
+  border-color:var(--btn-bd);
+  box-shadow:var(--btn-shadow), inset 0 0 0 1px rgba(255,255,255,.06);
+  text-transform:uppercase;
+}
+.btn--primary:hover,
+button.primary:hover,
+.arm-btn:hover,
+.withdraw-btn:hover,
+.modal-card footer .primary:hover,
+#loginModal #loginSubmit:hover,
+#walletWithdrawAll.primary:hover{
+  filter:saturate(110%); transform:translateY(-1px);
+}
+.btn--primary:disabled,
+button.primary:disabled,
+.arm-btn[disabled],
+.withdraw-btn:disabled,
+#loginModal #loginSubmit:disabled,
+#walletWithdrawAll.primary:disabled{
+  opacity:.55; cursor:not-allowed; filter:saturate(.9);
+}
+
+/* Ghost (klaas) */
+.btn--ghost,
+button.ghost,
+.modal-card footer .ghost,
+#loginModal #createAccBtn,
+button.ghost.small{
+  background:var(--glass-bg); color:var(--text);
+  border-color:var(--glass-bd); backdrop-filter:blur(6px);
+  box-shadow:inset 0 0 0 1px #ffffff10;
+}
+.btn--ghost:hover,
+button.ghost:hover,
+.modal-card footer .ghost:hover,
+#loginModal #createAccBtn:hover,
+button.ghost.small:hover{
+  filter:saturate(112%); transform:translateY(-1px); border-color:#ffffff55;
+}
+
+/* Chip-sized ghost (listide jaoks) */
+button.ghost.small{ padding:8px 10px; border-radius:10px; height:auto; font-weight:700; }
+
+/* Focus */
+.btn:focus-visible,
+button.primary:focus-visible,
+button.ghost:focus-visible,
+.arm-btn:focus-visible,
+.withdraw-btn:focus-visible,
+#loginModal #loginSubmit:focus-visible,
+#loginModal #createAccBtn:focus-visible,
+.spin-btn:focus-visible{
+  outline:2px solid #ffd28a; outline-offset:2px; border-radius:14px;
+}
+
+/* ─── Shared Card Surface (kasut.: .free-card, wallet read) ─── */
+.card,
+.free-card,
+#walletList > *,
+.wallet-row{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:12px 14px; border-radius:var(--card-r);
+  background:var(--card-bg);
+  border:var(--card-bd);
+  box-shadow:var(--card-shadow), inset 0 0 0 1px #ffffff12;
+  position:relative; overflow:hidden;
+  transition:transform .12s, box-shadow .2s, border-color .2s;
+}
+.card:hover,
+.free-card:hover,
+#walletList > *:hover,
+.wallet-row:hover{
+  transform:translateY(-1px);
+  border-color:#ffffff44;
+  box-shadow:var(--card-hover-shadow);
+}
+
+/* Roheline dot (free-card + wallet + meter + history) */
+.dot{
+  width:10px; height:10px; border-radius:999px; flex:0 0 auto;
+  background:linear-gradient(180deg,#b2ffb2,#33d17a);
+  box-shadow:0 0 12px rgba(51,209,122,.6);
+}
+
+/* ─── Ratas ───────────────────────────────────────────────────── */
+.wheel-wrap{
+  position:relative; width:min(92vw,340px); aspect-ratio:1/1; border-radius:50%;
+  display:grid; place-items:center; overflow:hidden;
+  background:
+    radial-gradient(closest-side,#0d1223 55%,transparent 56%),
+    radial-gradient(circle at 50% 50%,#ffcf3322,#ff6f3c10 40%,transparent 60%),
+    radial-gradient(farthest-side,#1a213b,#0c1121 65%,#070b14);
+  box-shadow:0 0 0 4px #1b2340, inset 0 0 40px 8px #0007, 0 15px 60px #0009;
+  transition:box-shadow .25s ease, transform .25s ease;
+}
+.rotor{position:absolute; inset:0; display:grid; place-items:center; will-change:transform}
+#wheel{width:92%; height:92%; display:block}
+.pointer{
+  position:absolute; top:-4px; left:50%; transform:translateX(-50%);
+  width:0; height:0; border-left:12px solid transparent; border-right:12px solid transparent;
+  border-top:18px solid var(--accent); filter:drop-shadow(0 6px 6px #0008);
+  transition:filter .25s ease;
+}
+
+/* Aktiivse ratta CSS-glow (sünkroonis JS-klassiga .wheel-active) */
+.wheel-wrap.wheel-active{
+  box-shadow:
+    0 0 0 4px #1b2340,
+    inset 0 0 60px 12px #0009,
+    0 24px 90px rgba(0,0,0,.9),
+    0 0 42px 6px rgba(255,210,138,.25);
+}
+.pointer.wheel-active{ filter: drop-shadow(0 10px 10px rgba(255,210,138,.55)); }
+
+.bulbs{position:absolute; inset:6px; margin:0; padding:0; list-style:none; pointer-events:none}
+.bulbs li{
+  position:absolute; width:10px; height:10px; border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,#fff,#ffd089 55%,#b86b00 80%);
+  box-shadow:0 0 12px 3px #ffdc8a55, inset 0 0 4px #0006;
+  animation:twinkle 1.4s infinite var(--delay) ease-in-out;
+}
+@keyframes twinkle{0%,100%{opacity:.5; transform:scale(.9)} 50%{opacity:1; transform:scale(1.08)}}
+.axle{
+  position:absolute; width:36%; aspect-ratio:1/1; border-radius:50%;
+  background:radial-gradient(closest-side,#251a0f,#000); box-shadow:inset 0 6px 20px #000, 0 4px 30px #000a;
+  display:grid; place-items:center;
+}
+.spin-btn{
+  width:86%; aspect-ratio:1/1; border-radius:50%; border:none; cursor:pointer; position:relative;
+  color:#3b1300; font-weight:900; letter-spacing:.08em; transition:transform .08s ease, filter .2s ease, opacity .2s ease;
+  background:radial-gradient(circle at 30% 30%,#fff 0,#ffd2a1 40%,#ff8c4c 70%,#ff6f3c 100%);
+  box-shadow:inset 0 5px 10px #fff7, 0 10px 16px #0008, 0 0 0 6px #2b1e10;
+}
+.spin-btn:active{transform:scale(.98)}
+.spin-btn:disabled{opacity:.55; cursor:not-allowed; filter:saturate(.75)}
+.spin-label{font-size:16px}
+
+/* ─── Paneelid, ajalugu, pisiasjad ───────────────────────────── */
+.panel{width:100%; background:linear-gradient(180deg,#0f1424aa,#0b0f1acc); border:1px solid #ffffff1f; border-radius:var(--radius); box-shadow:var(--shadow); padding:14px}
+.panel h2{font-size:14px; margin:0 0 10px; color:#dbe3ff}
+
+.history{display:grid; gap:10px; max-height:190px; overflow:auto; padding-right:4px}
+.history .row{display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:12px; background:#ffffff08; border:1px solid #ffffff14}
+.history .lbl{flex:1}
+.small{font-size:12px}
+
+/* ─── Meter ───────────────────────────────────────────────────── */
+.meter{width:100%; padding:12px; display:grid; gap:8px; position:relative; overflow:hidden}
+.meter-row{display:flex; align-items:center; gap:10px}
+.meter .lbl{flex:1}
+.meter-title{font-weight:800; letter-spacing:.02em}
+.meter-sub{font-size:12px; opacity:.9}
+
+/* Badge tugevam ja paremini joondatud */
+.meter-count{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:58px; height:34px; padding:0 12px;
+  border-radius:12px;
+  background:#ffffff14; border:1px solid #ffffff22;
+  font-weight:900; text-align:center;
+}
+
+/* Ahvatlev “saadaval” olek */
+.meter--has{
+  background: linear-gradient(180deg,#121a31,#0e152b) padding-box;
+  border: 1px solid #ffffff26;
+  box-shadow: 0 10px 28px rgba(0,0,0,.35), inset 0 0 0 1px #ffffff12;
+}
+.meter--has::before{
+  content:"";
+  position:absolute; inset:-1px -1px auto -1px; height:90px; pointer-events:none;
+  background: radial-gradient(420px 120px at 20% -10%, #33d17a33, transparent 65%),
+              radial-gradient(520px 120px at 85% 0, #ffcf3326, transparent 70%);
+}
+.meter--has #freeSub{
+  font-size:15px; font-weight:800; letter-spacing:.01em;
+}
+.meter--has #freeSub::before{
+  content:"";
+  display:inline-block;
+  width:10px; height:10px; margin-right:10px; border-radius:999px;
+  background: linear-gradient(180deg,#b2ffb2,#33d17a);
+  box-shadow: 0 0 0 4px rgba(51,209,122,.12), 0 0 16px rgba(51,209,122,.45);
+  animation: meterDotPulse 1.6s ease-in-out infinite;
+  vertical-align:-1px;
+}
+.meter--has .meter-count{
+  background: linear-gradient(180deg,#252f47,#1b243b);
+  border-color:#ffffff3a;
+  box-shadow: inset 0 0 0 1px #ffffff12, 0 6px 14px rgba(0,0,0,.25);
+}
+@keyframes meterDotPulse{
+  0%,100% { transform:scale(1);   box-shadow:0 0 0 4px rgba(51,209,122,.12), 0 0 16px rgba(51,209,122,.45); }
+  50%     { transform:scale(1.08); box-shadow:0 0 0 6px rgba(51,209,122,.10), 0 0 24px rgba(51,209,122,.55); }
+}
+
+/* Kui tasuta keerutusi pole, teeme sellest õhukese infotriibu */
+.meter--empty{
+  background:transparent;
+  border-color:transparent;
+  box-shadow:none;
+  padding:6px 0;
+}
+.meter--empty .meter-row:first-child{ display:none; }
+.meter--empty #nextFreeInfo{
+  display:block; width:100%; margin:0 auto; text-align:center;
+  font-size:14px; color:var(--muted); padding:6px 0;
+}
+
+/* ─── Free spin “kaardid” (kasutab shared cardi) ─────────────── */
+.free-list{display:grid; gap:10px}
+.free-card .info{display:flex; align-items:center; gap:10px; font-weight:800}
+
+/* AKTIVEERI nupp (kaetud Primary reegliga) */
+.arm-btn{}
+
+/* Visuaalne märge aktiveeritud kaardile */
+.free-card.armed{outline:2px solid #33d17a66; outline-offset:2px}
+.free-card.armed .arm-btn{
+  background:linear-gradient(180deg,#2a3857,#19243b); color:#eef2ff; border-color:#ffffff44;
+}
+
+/* Väike oranž badge (nt loendurite jaoks) */
+.badge{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:1.25em; height:1.25em; padding:0 .35em; margin-left:.4em;
+  border-radius:999px; font-size:.75rem; font-weight:800;
+  background:#ff8a3a; color:#3b1300; box-shadow:0 6px 16px rgba(255,138,58,.28);
+}
+
+/* ─── Wallet / Võidud (kasutab shared cardi) ─────────────────── */
+#walletList{ display:grid; gap:10px; }
+#walletList .info{ display:flex; align-items:center; gap:10px; font-weight:800; min-width:0; flex:1; }
+#walletList .prize-name{ font-weight:900; font-size:18px; letter-spacing:.01em; color:#eaf0ff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+#walletList .meta{ display:flex; align-items:center; gap:12px; white-space:nowrap; }
+#walletList time{ color:var(--muted); font-weight:600; }
+
+/* “just lisatud” highlight (kerge shimmer) */
+#walletList > *.win--new::after,
+.wallet-row.win--new::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(105deg,transparent 0%,rgba(255,255,255,.06) 35%,transparent 70%);
+  transform:translateX(-120%); animation:walletShimmer .9s ease-out forwards;
+}
+@keyframes walletShimmer{ to{ transform:translateX(120%); } }
+
+/* Wallet modal – joonda võitude nimed vasakule */
+#walletModal .modal-body { text-align: left; }
+#walletModal #walletList .info { justify-content: flex-start; }
+#walletModal #walletList .prize-name { text-align: left; }
+#walletModal #walletList > * { padding-left: 12px; }
+
+/* ─── Modaalid: ühtne ────────────────────────────────────────── */
+.modal{border:none; padding:0; background:transparent}
+.modal[open]::backdrop{
+  background: radial-gradient(1000px 420px at 50% -10%, #0009, #000d);
+  backdrop-filter: blur(2px);
+}
+
+/* Kaart ise */
+.modal-card{
+  position:relative;
+  width:min(92vw, 380px);
+  padding:22px 20px;
+  border-radius:20px;
+  background: linear-gradient(180deg, #141b31ee, #0c1227f2);
+  border:1px solid #ffffff26;
+  box-shadow:
+    0 22px 90px rgba(0,0,0,.72),
+    inset 0 0 48px rgba(0,0,0,.5);
+  overflow:hidden;
+}
+.modal-card::before{
+  content:"";
+  position:absolute; inset:-1px -1px auto -1px; height:120px;
+  border-radius:inherit; pointer-events:none;
+  background: radial-gradient(520px 140px at 50% 0, #ff9f3c29, transparent 60%);
+}
+
+/* Pealkiri keskelt, kuldse aktsendiga */
+.modal-card header h3{
+  margin:0 0 10px;
+  text-align:center;
+  font-weight:900; font-size:20px; letter-spacing:.01em;
+  color:#ffcf33;
+}
+
+/* Sisu ruudustik */
+.modal-body{display:grid; gap:14px; text-align:center}
+.muted{color:var(--muted)}
+
+/* Auhinna rida — suurem, rõhutatud */
+.prize-line{
+  display:flex; align-items:center; justify-content:center;
+  gap:12px; font-size:22px; font-weight:800; color:#eef2ff;
+}
+.prize-emoji{font-size:32px}
+
+/* Nupurida */
+.modal-card footer{ display:flex; justify-content:center; gap:14px; margin-top:14px; }
+
+/* Üks animatsioon kõigile modalitele */
+#prizeModal[open] .modal-card,
+#historyModal[open] .modal-card,
+#loginModal[open] .modal-card{
+  animation:modalIn .22s ease-out both;
+}
+@keyframes modalIn{
+  from{opacity:0; transform:translateY(-6px) scale(.985)}
+  to{opacity:1; transform:translateY(0) scale(1)}
+}
+
+/* Editor */
+.modal-editor textarea{
+  width:100%; min-height:260px; resize:vertical; padding:12px; border-radius:12px;
+  background:#050812; color:#eaf; border:1px solid #314;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px;
+}
+
+/* Muu */
+.confetti{position:fixed; inset:0; pointer-events:none; width:100%; height:100%}
+.history::-webkit-scrollbar{width:8px}
+.history::-webkit-scrollbar-thumb{background:#ffffff22; border-radius:8px}
+.hidden{display:none !important;} /* utiliit loogika jaoks */
+
+/* ─── LOGIN (laiendus: kasutab sama modal-card) ──────────────── */
+#loginModal .modal-card{backdrop-filter:saturate(120%) blur(6px); padding:28px 24px; text-align:center}
+#loginModal header{display:grid; justify-items:center; gap:10px; padding-top:6px; margin-bottom:16px}
+#loginModal header h3,#loginModal header h3::after{display:none}
+#loginModal .login-mark{
+  width:68px; height:68px; border-radius:50%; display:grid; place-items:center;
+  background:radial-gradient(120% 120% at 30% 20%, #ffd28a, #ff8a3a 70%);
+  border:1px solid rgba(255,185,100,.45);
+  box-shadow:0 10px 30px rgba(255,138,58,.28), inset 0 2px 6px rgba(255,255,255,.25), inset 0 -4px 10px rgba(0,0,0,.25);
+}
+#loginModal .login-mark i{font-size:28px; color:#1a2238; filter:drop-shadow(0 1px 0 rgba(255,255,255,.35))}
+#loginModal .login-sub{font-size:12px; letter-spacing:.04em; color:var(--muted); text-transform:uppercase}
+
+#loginModal .modal-body{display:grid; row-gap:20px}
+#loginModal .fields{display:grid; gap:18px; justify-items:center}
+#loginModal .field{display:grid; gap:8px; width:100%; max-width:var(--form-max)}
+#loginModal .field label{font-size:12px; color:var(--muted); text-align:left}
+
+#loginModal .input{
+  width:100%; max-width:var(--form-max); min-height:var(--ctrl-h); padding:14px 16px;
+  background:var(--field-bg); color:var(--text); font:inherit; border-radius:16px;
+  border:1px solid var(--field-bd);
+  transition:border-color .15s, box-shadow .15s, background .15s, transform .06s;
+}
+#loginModal .input::placeholder{color:var(--field-placeholder)}
+#loginModal .input:hover{border-color:var(--field-bd-hover)}
+#loginModal .input:focus{outline:0; border-color:var(--field-bd-focus); box-shadow:0 0 0 6px var(--field-ring); background:#ffffff07}
+
+#loginModal .checkbox-row{display:flex; align-items:center; justify-content:center; gap:12px; border:0; background:transparent}
+#loginModal .checkbox-row input[type="checkbox"]{
+  appearance:none; width:20px; height:20px; margin:0; border-radius:6px;
+  border:1px solid var(--field-bd); background:#ffffff0a; display:grid; place-items:center; transition:.15s;
+}
+#loginModal .checkbox-row input[type="checkbox"]::after{
+  content:""; width:11px; height:11px; border-radius:3px; transform:scale(0);
+  background:linear-gradient(180deg,#ffd28a,#ff8a3a); transition:.14s;
+}
+#loginModal .checkbox-row input[type="checkbox"]:checked::after{transform:scale(1)}
+#loginModal .checkbox-row label{margin:0; font-size:14px; color:rgba(238,242,255,.9)}
+
+#loginModal .forgot-link{color:var(--muted); font-size:13px; text-decoration:none; display:block; width:fit-content; margin:6px auto 0}
+#loginModal .forgot-link:hover{text-decoration:underline}
+
+#loginModal .cta-buttons{margin-top:24px; display:grid; gap:14px; justify-items:center}
+#loginModal .cta-buttons button{
+  width:100%; max-width:var(--form-max); height:var(--ctrl-h); padding:14px 16px; border-radius:16px;
+  font-weight:800; letter-spacing:.02em; color:#fff; text-shadow:0 1px 0 rgba(0,0,0,.35);
+  border:1px solid #ffffff22; cursor:pointer;
+  box-shadow:0 8px 22px rgba(0,0,0,.35), inset 0 0 0 1px #ffffff10;
+  transition:transform .08s, box-shadow .2s, border-color .2s, filter .2s;
+}
+/* #loginModal #loginSubmit → kaetud Primary reegliga */
+/* #loginModal #createAccBtn → kaetud Ghost reegliga */
+
+/* ─── Mobiil ─────────────────────────────────────────────────── */
+@media (max-width:380px){
+  #loginModal .modal-card{padding:22px 18px}
+  #loginModal .fields{gap:16px}
+  #loginModal .input,#loginModal .cta-buttons button{height:50px}
+}
+
+/* ─── Casino-style highlight värskelt saadud võidule ─────────── */
+@keyframes winPop { 0%{transform:scale(.96)} 40%{transform:scale(1.04)} 70%{transform:scale(.99)} 100%{transform:scale(1)} }
+@keyframes winPulse{
+  0%,100%{ box-shadow: var(--card-shadow), inset 0 0 0 1px #ffffff12, 0 0 0 0 rgba(51,209,122,0), 0 0 0 0 rgba(255,210,138,0); }
+  50%{ box-shadow: var(--card-shadow), inset 0 0 0 1px #ffffff18, 0 0 24px 6px rgba(51,209,122,.35), 0 0 30px 8px rgba(255,210,138,.25); }
+}
+#walletList > *.win--flash{ animation:winPop .5s ease-out, winPulse 1.8s ease-out; }
+#walletList > *.win--flash .prize-name{ text-shadow:0 0 14px rgba(255,255,255,.35); }
+#walletList > *.win--flash .dot{ box-shadow:0 0 18px rgba(51,209,122,.9); }
+
+
+
+/* ─── Wheel sector icons ─────────────────────────────────────── */
+.sector-icons{
+  position:absolute; inset:0; margin:0; padding:0; list-style:none;
+  pointer-events:none;
+}
+.sector-icons li{
+  position:absolute; left:50%; top:50%;
+  /* paigutame ringile: rotate → translate → unrotate */
+  transform: rotate(var(--deg, 0deg))
+             translateY(calc(-1 * var(--r, 38%)))
+             rotate(calc(-1 * var(--deg, 0deg)));
+  will-change: transform;
+}
+.sector-icons i{
+  font-size:18px; line-height:1;
+  color: var(--ico, #eaf0ff);
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.55));
+  opacity:.95;
+  transition: transform .15s ease;
+}
+.wheel-wrap.wheel-active .sector-icons i{
+  transform: translateZ(0) scale(1.04);
+}
+
+
+
+

@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="et">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Õnneratas • Premium Edition</title>
+    <meta name="description"
+        content="Õnneratas Premium Edition — iga päev üks tasuta keerutus ja pidulik võitude ajalugu." />
+    <meta name="theme-color" content="#0b0f1a" id="themeColor" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!-- ÕIGE JÄRJEKORD: kõigepealt polüfilli CSS, siis sinu oma -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dialog-polyfill@0.5.6/dist/dialog-polyfill.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+</head>
+
+<body>
+    <div class="app">
+        <header class="topbar">
+            <div class="brand" aria-label="Õnneratas bränd">
+                <span class="spark" aria-hidden="true">✦</span>
+                <span class="title">ÕNNERATAS</span>
+                <span class="spark" aria-hidden="true">✦</span>
+            </div>
+            <div class="top-actions">
+                <button id="loginBtn" class="ghost" type="button" aria-label="Logi sisse" data-open-dialog="loginModal">
+                    <i class="fa fa-user" aria-hidden="true"></i>
+                </button>
+                <button id="infoBtn" class="ghost" type="button" aria-label="Info" data-open-dialog="info">i</button>
+            </div>
+        </header>
+
+        <main class="stage">
+            <div class="wheel-wrap">
+                <div id="rotor" class="rotor">
+                    <canvas id="wheel" aria-label="Õnneratas"></canvas>
+                    <ul class="bulbs" id="bulbs" aria-hidden="true"></ul>
+                </div>
+
+                <div class="axle">
+                    <button id="spinBtn" class="spin-btn" type="button">
+                        <span id="freeSpinTag" class="spin-sub" hidden>START</span>
+                    </button>
+                </div>
+
+                <div class="pointer" aria-hidden="true"></div>
+            </div>
+
+            <!-- Sekundaarsed tegevused -->
+            <div class="actions">
+
+                <button id="devResetBtn" class="ghost" type="button"
+                    title="Nulli ajalugu ja too tasuta keerutus">RESET</button>
+
+                <!-- Võidud: sama UI-keel (ghost) + data-open-dialog -->
+                <button id="walletBtn" class="ghost" type="button" aria-label="Võidud" data-open-dialog="walletModal">
+                    Võidud
+                    <span id="walletBadge" class="badge" hidden></span>
+                </button>
+            </div>
+
+            <!-- Tasuta keerutuste paneel (kaardid + AKTIVEERI) -->
+            <div class="meter panel" id="freeMeter" aria-live="polite">
+                <div class="meter-title sr-only">Tasuta keerutused</div>
+                <div id="freeList" class="free-list"></div>
+                <div id="nextFreeInfo" class="meter-row small muted"></div>
+            </div>
+
+            <!-- VÕIDUD modal — ühtne markup sinu modaalidega -->
+            <dialog id="walletModal" class="modal" aria-label="Võidud">
+                <form method="dialog" class="modal-card">
+                    <header>
+                        <h3>Võidud</h3>
+                    </header>
+                    <div class="modal-body">
+                        <div id="walletEmpty" class="muted">Hetkel võite pole. Keeruta õnne!</div>
+                        <div id="walletList" class="list"></div>
+                    </div>
+                    <footer>
+                        <button class="ghost" value="close" type="submit">Sulge</button>
+
+                    </footer>
+                </form>
+            </dialog>
+
+            <!-- Prize dialog -->
+            <dialog id="prizeModal" class="modal" aria-labelledby="prizeTitle">
+                <form method="dialog" class="modal-card">
+                    <div class="modal-glow" aria-hidden="true"></div>
+                    <header>
+                        <h3 id="prizeTitle">Palju õnne!</h3>
+                    </header>
+                    <div class="modal-body">
+                        <div class="prize-line">
+                            <span id="prizeEmoji" class="prize-emoji" aria-hidden="true">🎁</span>
+                            <span id="prizeText" class="prize-text">Auhind</span>
+                        </div>
+                        <p id="prizeNote" class="muted"></p>
+                    </div>
+                    <footer>
+                        <button id="spinAgain" class="primary" type="button">Keera uuesti</button>
+                    </footer>
+                </form>
+            </dialog>
+
+            <!-- Ajalugu -->
+            <dialog id="historyModal" class="modal" aria-labelledby="historyHeading">
+                <form method="dialog" class="modal-card">
+                    <header>
+                        <h3 id="historyHeading">Võitude ajalugu</h3>
+                    </header>
+                    <div class="modal-body">
+                        <div id="history" class="history" role="log" aria-live="polite"></div>
+                    </div>
+                    <footer><button class="primary" type="submit">Sulge</button></footer>
+                </form>
+            </dialog>
+
+            <!-- Kuidas mängida -->
+            <dialog id="info" class="modal" aria-labelledby="howtoHeading">
+                <form method="dialog" class="modal-card">
+                    <header>
+                        <h3 id="howtoHeading">Kuidas mängida</h3>
+                    </header>
+                    <div class="modal-body">
+                        <ul class="muted">
+                            <li>Vajuta <b>KEERUTA</b>. Nõel ülal näitab tulemust.</li>
+                            <li>Üks tasuta keerutus iga päev.</li>
+                        </ul>
+                    </div>
+                    <footer><button class="primary" type="submit">Sain aru</button></footer>
+                </form>
+            </dialog>
+
+            <!-- Login -->
+            <dialog id="loginModal" class="modal" aria-label="Sisselogimine">
+                <form method="dialog" class="modal-card" id="loginForm">
+                    <header class="login-brand" aria-hidden="true">
+                        <div class="login-mark"><i class="fa-solid fa-user-lock" aria-hidden="true"></i></div>
+                    </header>
+                    <div class="modal-body">
+                        <div class="fields">
+                            <div class="field">
+                                <label for="email">E-post</label>
+                                <input class="input" id="email" name="email" type="email" placeholder="sinunimi@post.ee"
+                                    autocomplete="username" />
+                            </div>
+                            <div class="field">
+                                <label for="password">Parool</label>
+                                <input class="input" id="password" name="password" type="password"
+                                    placeholder="••••••••" autocomplete="current-password" />
+                            </div>
+                            <a href="#" id="forgotPwdLink" class="forgot-link">Unustasid parooli?</a>
+                        </div>
+                        <div class="cta-buttons">
+                            <button id="loginSubmit" type="submit">Logi sisse</button>
+                            <button id="createAccBtn" type="button">Loo konto</button>
+                        </div>
+                    </div>
+                </form>
+            </dialog>
+
+            <canvas id="confetti" class="confetti" aria-hidden="true"></canvas>
+        </main>
+    </div>
+
+    <!-- Skriptid -->
+    <script src="https://cdn.jsdelivr.net/npm/dialog-polyfill@0.5.6/dist/dialog-polyfill.min.js" defer></script>
+    <script src="scripts/dialogs.js" defer></script>
+
+    <script src="scripts/viewport.js" defer></script>
+    <script src="scripts/dom.js" defer></script>
+    <script src="scripts/constants.js" defer></script>
+    <script src="scripts/storage.js" defer></script>
+    <script src="scripts/time.js" defer></script>
+    <script src="scripts/meter.js" defer></script>
+    <script src="scripts/bulbs.js" defer></script>
+    <script src="scripts/wheel.js" defer></script>
+    <script src="scripts/spin.js" defer></script>
+    <script src="scripts/tick.js" defer></script>
+    <script src="scripts/prize.js" defer></script>
+    <script src="scripts/confetti.js" defer></script>
+    <script src="scripts/history.js" defer></script>
+    <script src="scripts/events.js" defer></script>
+    <script src="scripts/setup.js" defer></script>
+    <script src="scripts/dev.js" defer></script>
+
+    <!-- kerge avamisdelegatsioon + maketitud auth -->
+    <script defer>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.addEventListener('click', (e) => {
+                const btn = e.target.closest('[data-open-dialog]');
+                if (!btn) return;
+                const id = btn.getAttribute('data-open-dialog');
+                const dlg = document.getElementById(id);
+                if (dlg?.showModal) dlg.showModal();
+            });
+
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) loginForm.addEventListener('submit', () => { /* hook real auth here */ });
+
+            const forgot = document.getElementById('forgotPwdLink');
+            if (forgot) {
+                forgot.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    alert('Parooli taastamine tuleb peagi.');
+                });
+            }
+
+            const createAccBtn = document.getElementById('createAccBtn');
+            if (createAccBtn) {
+                createAccBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    alert('Konto loomine tuleb peagi.');
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
