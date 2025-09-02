@@ -161,3 +161,62 @@ function updateMeter() {
     // sünkroniseeri canvas-glow klassiga
     wrap?.classList.toggle('wheel-active', freeSpinArmed);
 }
+/* ... olemasolev algus jääb samaks ... */
+
+/* Joonista kaardid ja aktiveerimise loogika */
+function renderFreeCards(left) {
+    const list = $id('freeList'); if (!list) return;
+    list.innerHTML = '';
+
+    for (let i = 0; i < left; i++) {
+        const card = document.createElement('div');
+        card.className = 'free-card';
+
+        const info = document.createElement('div');
+        info.className = 'info';
+        info.innerHTML = `<span class="dot" aria-hidden="true"></span>
+                      <span>Tasuta keerutus</span>`;
+
+        const btn = document.createElement('button');
+        btn.className = 'arm-btn';
+        btn.type = 'button';
+        btn.textContent = 'AKTIVEERI';
+
+        btn.addEventListener('pointerdown', () => {
+            if (!btn.disabled) playActivate();
+        });
+
+        // aktivatsiooni loogika
+        btn.addEventListener('click', () => {
+            // tühista muud aktivatsioonid
+            [...list.querySelectorAll('.free-card')].forEach(c => {
+                c.classList.remove('armed');
+                const b = c.querySelector('.arm-btn');
+                if (b) { b.disabled = false; b.textContent = 'AKTIVEERI'; }
+            });
+            // märgi see kaart aktiveerituks
+            card.classList.add('armed');
+            btn.disabled = true;
+            btn.textContent = 'AKTIVEERITUD';
+            freeSpinArmed = true;
+
+            // luba spin nupp + visuaalne “aktiivne ratas”
+            const spinBtn = $id('spinBtn'); if (spinBtn) spinBtn.disabled = false;
+            const wrap = $qs('.wheel-wrap');
+            wrap?.classList.add('wheel-active');
+
+            // ⬇️ puhasta eelmise võidu GIF (kui oli)
+            wrap?.classList.remove('show-gif');
+            const gif = document.getElementById('centerGif');
+            if (gif) gif.removeAttribute('src');
+
+            if (typeof drawStaticWheel === 'function') drawStaticWheel();
+        });
+
+        card.appendChild(info);
+        card.appendChild(btn);
+        list.appendChild(card);
+    }
+}
+
+/* ülejäänud meter.js (updateMeter jne) jääb muutmata */

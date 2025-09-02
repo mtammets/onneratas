@@ -89,3 +89,25 @@
   pointer-events: auto;
   transform: none;
 }
+/* Kesk-GIF (täidab telje augu, nähtav ainult show-gif režiimis) */
+.axle { position: relative; }
+.center-gif{
+  position:absolute; inset:0;
+  width:100%; height:100%; border-radius:50%;
+  object-fit:cover;
+  opacity:0; pointer-events:none;
+  transition:opacity .22s ease;
+  z-index:2; /* telje sees, kuid nupu all */
+}
+
+/* Võidu järel näita GIF-i */
+.wheel-wrap.show-gif .center-gif{ opacity:1; }
+
+/* Kui ratas on taas aktiveeritud (AKTIVEERI vajutatud), peida GIF */
+.wheel-wrap.wheel-active .center-gif{ opacity:0; }
+
+/* Kindluse mõttes peida nupp, kui GIF on väljas */
+.wheel-wrap.show-gif #spinBtn{
+  opacity:0;
+  pointer-events:none;
+}

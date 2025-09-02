@@ -22,7 +22,7 @@ const WHEEL_SLICES = [
 ];
 
 /* Tasuta keerutused + animatsioon */
-const FREE_SPINS_PER_DAY = 45;
+const FREE_SPINS_PER_DAY = 50;
 const SPIN_TURNS_BASE = 6.5;
 const SPIN_TURNS_RANDOM = 6.5;
 const SPIN_MS_BASE = 10500;
@@ -43,3 +43,17 @@ window.SPIN_MS_BASE = SPIN_MS_BASE;
 window.SPIN_MS_JITTER = SPIN_MS_JITTER;
 window.TAU = TAU;
 window.isRealWin = isRealWin;
+
+
+/* Võidusektori → GIF kaardistus */
+const SECTOR_GIF_BY_ID = {
+  'sec-1': 'gifs/1.gif',     // kroon
+  'sec-2': 'gifs/2.gif',      // leaf
+  'sec-3': 'gifs/3.gif',    // kohv
+  'sec-4': 'gifs/4.gif',   // shoppamine/“gem”
+  'sec-5': 'gifs/5.gif',      // filmiõhtu/“star”
+  'sec-6': 'gifs/6.gif',      // õhtusöök
+  'sec-7': 'gifs/7.gif',     // soov/“heart”
+  'sec-8': 'gifs/8.gif'       // jalutuskäik/“moon”
+};
+window.SECTOR_GIF_BY_ID = SECTOR_GIF_BY_ID;
