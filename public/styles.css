@@ -35,6 +35,9 @@ body{
   min-height:var(--vh);
 }
 
+/* iOS: väldi input-fookusel automaatset suumimist */
+input, textarea, select { font-size:16px; }
+
 /* A11y utiliidid */
 .sr-only{
   position:absolute!important; width:1px; height:1px; padding:0; margin:-1px;
@@ -42,7 +45,11 @@ body{
 }
 
 /* ─── Üldine paigutus ─────────────────────────────────────────── */
-.app{max-width:420px; margin:0 auto; padding: env(safe-area-inset-top) 16px calc(env(safe-area-inset-bottom) + 16px)}
+.app{
+  max-width:420px;
+  margin:0 auto;
+  padding: env(safe-area-inset-top) 16px calc(env(safe-area-inset-bottom) + 16px);
+}
 .topbar{display:flex; align-items:center; justify-content:space-between; padding:12px 4px 0}
 .top-actions{display:flex; gap:8px; align-items:center}
 .brand{display:flex; gap:10px; align-items:center; letter-spacing:.12em}
@@ -55,7 +62,7 @@ body{
    ÜHTNE KOMPONENDISTIIL: Buttons, Cards, Modals
 ────────────────────────────────────────────────────────────── */
 
-/* Buttons: base + variants (katab .arm-btn, button.primary/ghost, modal-nupud) */
+/* Buttons: base + variants */
 button.primary,
 button.ghost,
 .arm-btn,
@@ -71,7 +78,7 @@ button.ghost,
   transition:filter .2s, transform .06s, box-shadow .2s, border-color .2s;
 }
 
-/* Primary (oranž pill) */
+/* Primary */
 button.primary,
 .arm-btn,
 .modal-card footer .primary{
@@ -87,11 +94,9 @@ button.primary:hover,
   filter:saturate(110%); transform:translateY(-1px);
 }
 button.primary:disabled,
-.arm-btn[disabled]{
-  opacity:.55; cursor:not-allowed; filter:saturate(.9);
-}
+.arm-btn[disabled]{ opacity:.55; cursor:not-allowed; filter:saturate(.9); }
 
-/* Ghost (klaas) */
+/* Ghost */
 button.ghost,
 .modal-card footer .ghost,
 button.ghost.small{
@@ -104,8 +109,6 @@ button.ghost:hover,
 button.ghost.small:hover{
   filter:saturate(112%); transform:translateY(-1px); border-color:#ffffff55;
 }
-
-/* Chip-sized ghost (listide jaoks) */
 button.ghost.small{ padding:8px 10px; border-radius:10px; height:auto; font-weight:700; }
 
 /* Focus */
@@ -116,7 +119,7 @@ button.ghost:focus-visible,
   outline:2px solid #ffd28a; outline-offset:2px; border-radius:14px;
 }
 
-/* ─── Shared Card Surface (kasut.: .free-card) ─── */
+/* ─── Card surface ─── */
 .card,
 .free-card{
   display:flex; align-items:center; justify-content:space-between; gap:12px;
@@ -127,14 +130,13 @@ button.ghost:focus-visible,
   position:relative; overflow:hidden;
   transition:transform .12s, box-shadow .2s, border-color .2s;
 }
-.card:hover,
-.free-card:hover{
+.card:hover, .free-card:hover{
   transform:translateY(-1px);
   border-color:#ffffff44;
   box-shadow:var(--card-hover-shadow);
 }
 
-/* Roheline dot (free-card + meter + history) */
+/* Roheline dot */
 .dot{
   width:10px; height:10px; border-radius:999px; flex:0 0 auto;
   background:linear-gradient(180deg,#b2ffb2,#33d17a);
@@ -161,7 +163,7 @@ button.ghost:focus-visible,
   transition:filter .25s ease;
 }
 
-/* Aktiivse ratta CSS-glow (sünkroonis JS-klassiga .wheel-active) */
+/* Aktiivse ratta glow */
 .wheel-wrap.wheel-active{
   box-shadow:
     0 0 0 4px #1b2340,
@@ -194,7 +196,7 @@ button.ghost:focus-visible,
 .spin-btn:disabled{opacity:.55; cursor:not-allowed; filter:saturate(.75)}
 .spin-label{font-size:16px}
 
-/* ─── Paneelid, ajalugu, pisiasjad ───────────────────────────── */
+/* ─── Paneelid, ajalugu ──────────────────────────────────────── */
 .panel{width:100%; background:linear-gradient(180deg,#0f1424aa,#0b0f1acc); border:1px solid #ffffff1f; border-radius:var(--radius); box-shadow:var(--shadow); padding:14px}
 .panel h2{font-size:14px; margin:0 0 10px; color:#dbe3ff}
 
@@ -214,8 +216,7 @@ button.ghost:focus-visible,
 .meter-count{
   display:inline-flex; align-items:center; justify-content:center;
   min-width:58px; height:34px; padding:0 12px;
-  border-radius:12px;
-  background:#ffffff14; border:1px solid #ffffff22;
+  border-radius:12px; background:#ffffff14; border:1px solid #ffffff22;
   font-weight:900; text-align:center;
 }
 
@@ -231,12 +232,9 @@ button.ghost:focus-visible,
   box-shadow: inset 0 0 0 1px #ffffff12, 0 6px 14px rgba(0,0,0,.25);
 }
 
-/* Kui tasuta keerutusi pole, teeme sellest õhukese infotriibu */
+/* Kui tasuta keerutusi pole, teeme infotriibu */
 .meter--empty{
-  background:transparent;
-  border-color:transparent;
-  box-shadow:none;
-  padding:6px 0;
+  background:transparent; border-color:transparent; box-shadow:none; padding:6px 0;
 }
 .meter--empty .meter-row:first-child{ display:none; }
 .meter--empty #nextFreeInfo{
@@ -244,37 +242,46 @@ button.ghost:focus-visible,
   font-size:14px; color:var(--muted); padding:6px 0;
 }
 
-/* ─── Free spin “kaardid” ─────────────── */
+/* ─── Free spin kaardid ─────────────── */
 .free-list{display:grid; gap:10px}
 .free-card .info{display:flex; align-items:center; gap:10px; font-weight:800}
 
-/* AKTIVEERI nupp (kaetud Primary reegliga) */
+/* AKTIVEERI nupp */
 .arm-btn{}
 
-/* Visuaalne märge aktiveeritud kaardile */
+/* Märge aktiveeritud kaardile */
 .free-card.armed{outline:2px solid #33d17a66; outline-offset:2px}
 .free-card.armed .arm-btn{
   background:linear-gradient(180deg,#2a3857,#19243b); color:#eef2ff; border-color:#ffffff44;
 }
 
-/* ─── Modaalid: ühtne ────────────────────────────────────────── */
-.modal{border:none; padding:0; background:transparent}
+/* ─── Modaalid ───────────────────────────────────────────────── */
+
+/* ✅ FIX: pane <dialog> täisekraani overlayks ja TSENTRI sisu */
+.modal{
+  border:none;
+  padding:0;
+  background:transparent;
+}
+
 .modal[open]::backdrop{
   background: radial-gradient(1000px 420px at 50% -10%, #0009, #000d);
   backdrop-filter: blur(2px);
 }
+/* Kui mõni modal on avatud, ära luba taustal kerida */
+body:has(dialog[open]){ overflow:hidden; }
 
 /* Kaart ise */
 .modal-card{
+  
   position:relative;
-  width:min(92vw, 380px);
+  width: 90vw;
+  margin:0 auto;
   padding:22px 20px;
   border-radius:20px;
   background: linear-gradient(180deg, #141b31ee, #0c1227f2);
   border:1px solid #ffffff26;
-  box-shadow:
-    0 22px 90px rgba(0,0,0,.72),
-    inset 0 0 48px rgba(0,0,0,.5);
+  box-shadow: 0 22px 90px rgba(0,0,0,.72), inset 0 0 48px rgba(0,0,0,.5);
   overflow:hidden;
 }
 .modal-card::before{
@@ -284,19 +291,28 @@ button.ghost:focus-visible,
   background: radial-gradient(520px 140px at 50% 0, #ff9f3c29, transparent 60%);
 }
 
-/* Pealkiri keskelt, kuldse aktsendiga */
-.modal-card header h3{
-  margin:0 0 10px;
-  text-align:center;
-  font-weight:900; font-size:20px; letter-spacing:.01em;
-  color:#ffcf33;
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.6); /* soovi korral taust */
+  z-index: 999;
 }
 
-/* Sisu ruudustik */
+
+/* Pealkiri */
+.modal-card header h3{
+  margin:0 0 10px; text-align:center;
+  font-weight:900; font-size:20px; letter-spacing:.01em; color:#ffcf33;
+}
+
+/* Sisu */
 .modal-body{display:grid; gap:14px; text-align:center}
 .muted{color:var(--muted)}
 
-/* Auhinna rida — suurem, rõhutatud */
+/* Auhinna rida */
 .prize-line{
   display:flex; align-items:center; justify-content:center;
   gap:12px; font-size:22px; font-weight:800; color:#eef2ff;
@@ -306,7 +322,7 @@ button.ghost:focus-visible,
 /* Nupurida */
 .modal-card footer{ display:flex; justify-content:center; gap:14px; margin-top:14px; }
 
-/* Üks animatsioon kõigile modalitele */
+/* Animatsioon */
 #prizeModal[open] .modal-card,
 #historyModal[open] .modal-card{
   animation:modalIn .22s ease-out both;
@@ -329,136 +345,18 @@ button.ghost:focus-visible,
 .history::-webkit-scrollbar-thumb{background:#ffffff22; border-radius:8px}
 .hidden{display:none !important;} /* utiliit loogika jaoks */
 
-/* ─── Mobiil (login-modali jaoks erireegleid enam pole) ──────── */
+/* ─── Mobiil (ruumi jäetud) ──────── */
 @media (max-width:380px){
-  /* hoia failis tulevikuks ruumi, kui mõni paneel vajab erikohtlemist */
+  /* lisa vajadusel väiksemaid kohandusi */
 }
 
 
-
-
-
-
-/* Wallet nagu meter */
-#walletModal .modal-body{ text-align: initial; } /* ära keskjoonda listi */
-
-#walletList.free-list{
-  display:grid; gap:10px; max-height:260px; overflow:auto; padding-right:4px;
-}
-
-/* kasuta sama kaardi pinda ja SUNDI tekst valgeks */
-#walletList .free-card{
-  background: var(--card-bg);
-  border: var(--card-bd);
-  box-shadow: var(--card-shadow), inset 0 0 0 1px #ffffff12;
-  color: var(--text);
-}
-#walletList .free-card .info{
-  display:flex; align-items:center; gap:10px; font-weight:800; color:var(--text);
-}
-#walletList .free-card .wallet-name{ color:var(--text); } /* nimi mitte must */
+#walletList .free-card .info{ display:flex; align-items:center; gap:10px; font-weight:800; color:var(--text); }
+#walletList .free-card .wallet-name{ color:var(--text); }
 #walletList .free-card i{ flex:0 0 auto; }
+#walletList .free-card:hover{ border-color:#ffffff44; box-shadow: var(--card-hover-shadow); }
 
-/* (valikuline) sama hover-efekt nagu meteril */
-#walletList .free-card:hover{
-  border-color:#ffffff44;
-  box-shadow: var(--card-hover-shadow);
-}
-
-
-/* Login modal = sama mõõt ja pind mis meter/wallet */
-#loginModal .modal-body{ text-align: initial; }
-.login-form{ display:grid; gap:14px; max-width:var(--form-max); margin:0 auto; }
-
-/* Sama “card surface” väljade ümber */
-.login-fields{ display:grid; gap:12px; padding:16px 22px; }
-
-/* Väljade ülesehitus */
-.input-wrap{ position:relative; }
-.input-wrap .icon-left{
-  position:absolute; left:12px; top:50%; transform:translateY(-50%); opacity:.9;
-}
-.input-wrap input{
-  width:100%; height:var(--ctrl-h); padding:0 42px 0 38px;
-  border-radius:12px; background:var(--field-bg); color:var(--text);
-  border:1px solid var(--field-bd); outline:none;
-  transition:border-color .2s, box-shadow .2s, background .2s;
-}
-.input-wrap input::placeholder{ color:var(--field-placeholder); }
-.input-wrap input:hover{ border-color:var(--field-bd-hover); }
-.input-wrap input:focus{
-  border-color:var(--field-bd-focus);
-  box-shadow:0 0 0 6px var(--field-ring);
-}
-
-/* Parooli silma nupp */
-.icon-btn{
-  position:absolute; right:8px; top:50%; transform:translateY(-50%);
-  display:inline-flex; align-items:center; justify-content:center;
-  width:36px; height:36px; border-radius:10px; border:1px solid var(--glass-bd);
-  background:var(--glass-bg); color:var(--text); cursor:pointer;
-  backdrop-filter:blur(4px);
-}
-.icon-btn:hover{ border-color:#ffffff55; }
-
-/* Vead */
-.error-msg{ font-size:12px; color:#ff8a8a; padding:6px 2px 0; min-height:18px; }
-.field.invalid input{ border-color:#ff8484 !important; box-shadow:0 0 0 6px #ff848418 !important; }
-
-/* Abi rida: keskel, ühel real */
-.aux-row{
-  display:flex;
-  justify-content:center;   /* ⬅️ oli space-between */
-  align-items:center;
-  gap:16px;                 /* veidi rohkem õhku */
-  margin-top:6px;
-  text-align:center;
-}
-
-/* “Jäta mind meelde” välimus */
-.remember{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  font-size:14px;
-  color:var(--text);
-  opacity:.9;
-  white-space:nowrap;       /* ära murra */
-}
-.remember input{
-  width:16px; height:16px;
-  accent-color: var(--accent);
-}
-
-/* link jääb samale reale ja ei murru */
-.aux-row a{ white-space:nowrap; }
-
-
-/* Sotsiaalsed nupud */
-.social-row{ display:grid; gap:10px; }
-.social-btn{ display:flex; align-items:center; gap:10px; justify-content:center; }
-
-/* Nupud: sama kõrgus/tunne, primary täislaiuses */
-.login-actions{ display:flex; gap:14px; justify-content:center; }
-#loginSubmitBtn.primary{ min-width:160px; }
-
-
-/* Auth tabs (klaasist segment) */
-.auth-tabs{
-  display:flex; gap:8px; justify-content:center; margin-top:8px;
-}
-.auth-tab{
-  padding:8px 12px; border-radius:12px;
-  background: var(--glass-bg); border:1px solid var(--glass-bd);
-  color: var(--text); cursor:pointer; user-select:none;
-  backdrop-filter: blur(6px);
-}
-.auth-tab.active{
-  background: linear-gradient(180deg,#252f47,#1b243b);
-  border-color:#ffffff44; font-weight:800;
-}
-
-/* login/sign-up vormi pisitäpsused */
+/* Login modal */
 #loginModal .modal-body{ text-align: initial; }
 .login-form{ display:grid; gap:14px; max-width:var(--form-max); margin:0 auto; }
 .login-fields{ display:grid; gap:12px; padding:16px 22px; }
@@ -467,88 +365,72 @@ button.ghost:focus-visible,
 .input-wrap input{
   width:100%; height:var(--ctrl-h); padding:0 42px 0 38px;
   border-radius:12px; background:var(--field-bg); color:var(--text);
-  border:1px solid var(--field-bd); outline:none; transition:border-color .2s, box-shadow .2s;
+  border:1px solid var(--field-bd); outline:none;
+  transition:border-color .2s, box-shadow .2s, background .2s;
 }
 .input-wrap input::placeholder{ color:var(--field-placeholder); }
 .input-wrap input:hover{ border-color:var(--field-bd-hover); }
 .input-wrap input:focus{ border-color:var(--field-bd-focus); box-shadow:0 0 0 6px var(--field-ring); }
-
 .icon-btn{
   position:absolute; right:8px; top:50%; transform:translateY(-50%);
   display:inline-flex; align-items:center; justify-content:center;
   width:36px; height:36px; border-radius:10px; border:1px solid var(--glass-bd);
-  background:var(--glass-bg); color:var(--text);
+  background:var(--glass-bg); color:var(--text); cursor:pointer; backdrop-filter:blur(4px);
 }
 .icon-btn:hover{ border-color:#ffffff55; }
-
 .error-msg{ font-size:12px; color:#ff8a8a; padding:6px 2px 0; min-height:18px; }
 .field.invalid input{ border-color:#ff8484 !important; box-shadow:0 0 0 6px #ff848418 !important; }
 
-.remember{ display:flex; align-items:center; gap:8px; font-size:14px; color:var(--text); opacity:.9; }
+.aux-row{ display:flex; justify-content:center; align-items:center; gap:16px; margin-top:6px; text-align:center; }
+.remember{ display:inline-flex; align-items:center; gap:8px; font-size:14px; color:var(--text); opacity:.9; white-space:nowrap; }
+.remember input{ width:16px; height:16px; accent-color: var(--accent); }
+.aux-row a{ white-space:nowrap; }
+
+.social-row{ display:grid; gap:10px; }
+.social-btn{ display:flex; align-items:center; gap:10px; justify-content:center; }
 .login-actions{ display:flex; gap:14px; justify-content:center; }
-.hidden{ display:none !important; }
-/* Info modal – samad mõõdud ja pind nagu meter/wallet/login */
+#loginSubmitBtn.primary{ min-width:160px; }
+
+.auth-tabs{ display:flex; gap:8px; justify-content:center; margin-top:8px; }
+.auth-tab{
+  padding:8px 12px; border-radius:12px;
+  background: var(--glass-bg); border:1px solid var(--glass-bd);
+  color: var(--text); cursor:pointer; user-select:none; backdrop-filter: blur(6px);
+}
+.auth-tab.active{
+  background: linear-gradient(180deg,#252f47,#1b243b);
+  border-color:#ffffff44; font-weight:800;
+}
+
+/* Info modal */
 #info .modal-body { text-align: initial; }
-
 #infoList.free-list{
-  display:grid;
-  gap:10px;
-  max-height:260px;           /* sama scroll-kõrgus kui walletil */
-  overflow:auto;
-  padding-right:4px;
+  display:grid; gap:10px; max-height:260px; overflow:auto; padding-right:4px;
 }
-
 #infoList .free-card{
-  background: var(--card-bg);
-  border: var(--card-bd);
+  background: var(--card-bg); border: var(--card-bd);
   box-shadow: var(--card-shadow), inset 0 0 0 1px #ffffff12;
-  border-radius: var(--card-r);
-  padding:16px 22px;          /* samad sisepadjad nagu meteril */
-  display:flex;
-  align-items:center;
-  gap:12px;
-  color: var(--text);
+  border-radius: var(--card-r); padding:16px 22px;
+  display:flex; align-items:center; gap:12px; color: var(--text);
 }
-#infoList .free-card:hover{
-  border-color:#ffffff44;
-  box-shadow: var(--card-hover-shadow);
-}
-
-#infoList .free-card .info{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:800;
-  color: var(--text);         /* valge, mitte must */
-}
-
+#infoList .free-card:hover{ border-color:#ffffff44; box-shadow: var(--card-hover-shadow); }
+#infoList .free-card .info{ display:flex; align-items:center; gap:10px; font-weight:800; color: var(--text); }
 #infoList .free-card i{ font-size:18px; flex:0 0 auto; }
 #infoList .free-card .info-title{ font-weight:800; color:var(--text); }
+
 /* login/signup vahetamise lingid */
-.auth-switch{
-  text-align:center;
-  margin-top:6px;
-}
+.auth-switch{ text-align:center; margin-top:6px; }
 .auth-switch a{
-  color: var(--text);
-  font-weight:800;
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  color: var(--text); font-weight:800;
+  text-decoration: underline; text-underline-offset: 3px;
 }
 .auth-switch a:hover{ opacity:.9; }
 
+/* Ratta kanvas – enne aktiveerimist veidi tumedam */
+.wheel-wrap #wheel{ transition: filter .25s ease; }
+.wheel-wrap:not(.wheel-active) #wheel{ filter: brightness(.72) saturate(.92) contrast(1.06); }
+.wheel-wrap.wheel-active #wheel{ filter: none; }
 
 
-//* Tumedamad sektorid enne aktiveerimist (ainult canvas) */
-.wheel-wrap #wheel{
-  transition: filter .25s ease;
-}
 
-.wheel-wrap:not(.wheel-active) #wheel{
-  filter: brightness(.72) saturate(.92) contrast(1.06);
-}
 
-/* Aktiivsel rattal taastame normaali */
-.wheel-wrap.wheel-active #wheel{
-  filter: none;
-}

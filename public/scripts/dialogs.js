@@ -11,3 +11,5 @@
     reg("historyModal");
     reg("info");
 })();
+
+
