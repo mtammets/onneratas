@@ -6,15 +6,19 @@
        Document Metadata
   ─────────────────────────────────────────────────────────── -->
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Õnneratas • Premium Edition</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+
+    <title>Õnneratas</title>
     <meta name="description"
         content="Õnneratas Premium Edition — iga päev üks tasuta keerutus ja pidulik võitude ajalugu." />
     <meta name="theme-color" content="#0b0f1a" id="themeColor" />
 
     <!-- iOS PWA -->
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes"> <!-- fallback vanematele iOS versioonidele -->
+    <meta name="apple-mobile-web-app-capable" content="yes"> <!-- fallback 
+    vanematele iOS versioonidele -->
+
 
     <!-- Favicon (väldib 404) -->
     <link rel="icon" href="/favicon.ico">
@@ -26,6 +30,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="styles.css" />
+
+    <link rel="stylesheet" href="/css/variables.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/layout.css">
+
+    <!-- Komponendid -->
+    <link rel="stylesheet" href="/css/components.buttons.css">
+    <link rel="stylesheet" href="/css/components.cards.css">
+    <link rel="stylesheet" href="/css/components.modals.css">
+    <link rel="stylesheet" href="/css/components.forms.css">
+    <link rel="stylesheet" href="/css/components.panels-history.css">
+    <link rel="stylesheet" href="/css/components.meter.css">
+    <link rel="stylesheet" href="/css/components.free-spins.css">
+    <link rel="stylesheet" href="/css/components.wheel.css">
+
+    <!-- Spetsiifilised vaated/listid -->
+    <link rel="stylesheet" href="/css/login.modal.css">
+
+    <link rel="stylesheet" href="/css/wallet.list.css">
+    <link rel="stylesheet" href="/css/misc.css">
+
 </head>
 
 <body>
@@ -41,20 +66,19 @@
          Top Bar
     ───────────────────────────────────────────────────────── -->
         <header class="topbar">
-            <div class="brand" aria-label="Õnneratas bränd">
-                <span class="spark" aria-hidden="true">✦</span>
-                <span class="title" aria-hidden="true">ABIKAASA ÕNNERATAS</span>
-                <span class="spark" aria-hidden="true">✦</span>
+            <div class="brand" data-auth-only aria-label="Õnneratas bränd">
+                <img src="images/logo.png" alt="Õnneratas logo" class="brand-logo">
+            </div>
+
+
+            <!-- Nähtav ainult siis, kui user on sees -->
+            <div id="userArea" class="ghost" style="display:none; align-items:center; gap:.5rem" data-auth-only>
+
+                <button id="logoutBtn" class="ghost" type="button" title="Logi välja">Logi välja</button>
             </div>
 
             <div class="top-actions">
-                <!-- Buttons expose data attributes for dialog handling -->
-                <button id="loginBtn" class="ghost" type="button" aria-label="Logi sisse" data-open-dialog="loginModal">
-                    <i class="fa fa-user" aria-hidden="true"></i>
-                </button>
-                <button id="infoBtn" class="ghost" type="button" aria-label="Info" data-open-dialog="info">
-                    i
-                </button>
+
             </div>
         </header>
 
@@ -63,25 +87,40 @@
     ───────────────────────────────────────────────────────── -->
         <main class="stage">
             <!-- Wheel -->
+            <!-- Wheel -->
             <div class="wheel-wrap" aria-live="polite">
                 <div id="rotor" class="rotor">
                     <canvas id="wheel" aria-label="Õnneratas"></canvas>
                     <ul class="bulbs" id="bulbs" aria-hidden="true"></ul>
                 </div>
 
-                <!-- Axle + Spin CTA -->
                 <div class="axle">
                     <button id="spinBtn" class="spin-btn" type="button" aria-label="Alusta keerutust">
                         <span id="freeSpinTag" class="spin-sub" hidden>START</span>
                     </button>
                 </div>
 
-                <!-- Pointer (visual indicator only) -->
                 <div class="pointer" aria-hidden="true"></div>
             </div>
 
-            <!-- Secondary Actions -->
-            <div class="actions">
+            <!-- See ilmub ainult välja logituna -->
+            <!-- See ilmub ainult välja logituna -->
+            <div id="loggedOutImage" class="logged-out-only" style="display:none; text-align:center; margin-top:1rem;">
+                <img src="images/pic.png" alt="Logi sisse, et mängida" style="max-width:200px; cursor:pointer;"
+                    data-open-dialog="loginModal">
+            </div>
+
+
+
+            <!-- Login vihje mull (näidatakse vaid vajadusel) -->
+            <div id="loginHint" class="chat-bubble hidden" role="status" aria-live="polite">
+                <i class="fa-solid fa-message"></i>
+                <span>Jätkamiseks logi sisse, kallis!</span>
+            </div>
+
+
+            <!-- Secondary Actions (peidetakse väljalogituna) -->
+            <div class="actions" data-auth-only>
                 <button id="myPrizesBtn" class="ghost wallet-cta" type="button" title="View your prize history"
                     data-open-dialog="walletModal">
                     <span>MINU VÕIDUD</span>
@@ -89,8 +128,8 @@
                 </button>
             </div>
 
-            <!-- Free Spins Panel -->
-            <section class="meter panel" id="freeMeter" aria-live="polite">
+            <!-- Free Spins Panel (peidetakse väljalogituna) -->
+            <section class="meter panel" id="freeMeter" data-auth-only aria-live="polite">
                 <h2 class="meter-title sr-only">Tasuta keerutused</h2>
                 <div id="freeList" class="free-list"></div>
                 <div id="nextFreeInfo" class="meter-row small muted"></div>
@@ -205,36 +244,8 @@
         </div>
     </dialog>
 
-    <!-- Info modal -->
-    <dialog id="info" class="modal">
-        <div class="modal-card">
-            <header>
-                <h3>Info</h3>
-            </header>
-
-            <div class="modal-body">
-                <!-- Sama pind/mõõt mis meteril: free-list + free-card -->
-                <div id="infoList" class="free-list">
-                    <div class="free-card">
-                        <div class="info lbl">
-                            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-                            <div>
-                                <div class="info-title">Keeruta ratast</div>
-                                <div class="muted small">Naudi võitu!</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <footer>
-                <button class="ghost" data-close-dialog="info">Sulge</button>
-            </footer>
-        </div>
-    </dialog>
-
-    <!-- Võitude rahakoti modal -->
-    <dialog id="walletModal" class="modal">
+    <!-- Võitude rahakoti modal (peidetakse väljalogituna) -->
+    <dialog id="walletModal" class="modal" data-auth-only>
         <div class="modal-card">
             <header></header>
             <div class="modal-body">

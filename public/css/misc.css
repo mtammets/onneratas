@@ -1,0 +1,32 @@
+/* Editor */
+.modal-editor textarea{
+  width:100%; min-height:260px; resize:vertical; padding:12px; border-radius:12px;
+  background:#050812; color:#eaf; border:1px solid #314;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px;
+}
+
+/* Konfetti-kiht */
+.confetti{position:fixed; inset:0; pointer-events:none; width:100%; height:100%}
+
+
+/* Chat bubble ratta alla */
+.chat-bubble{
+  display:inline-flex; align-items:center; gap:.5rem;
+  background:#101525; color:#e8ecff;
+  border:1px solid #22304d; border-radius:14px;
+  padding:.6rem .8rem; margin-top:12px;
+  box-shadow:0 6px 20px rgba(0,0,0,.35);
+  max-width:clamp(240px, 80vw, 480px);
+  opacity:0; transform:translateY(6px);
+  transition:opacity .22s ease, transform .22s ease;
+}
+.chat-bubble i{ opacity:.9 }
+.chat-bubble.visible{ opacity:1; transform:translateY(0) }
+
+/* Väike nooleke (caret) mullile */
+.chat-bubble::after{
+  content:""; position:absolute; width:0; height:0;
+  border-left:10px solid transparent; border-right:10px solid transparent;
+  border-top:10px solid #101525;
+  transform:translateY(10px);
+}

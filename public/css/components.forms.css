@@ -1,0 +1,22 @@
+.input-wrap{ position:relative; }
+.input-wrap .icon-left{ position:absolute; left:12px; top:50%; transform:translateY(-50%); opacity:.9; }
+.input-wrap input{
+  width:100%; height:var(--ctrl-h); padding:0 42px 0 38px;
+  border-radius:12px; background:var(--field-bg); color:var(--text);
+  border:1px solid var(--field-bd); outline:none;
+  transition:border-color .2s, box-shadow .2s, background .2s;
+}
+.input-wrap input::placeholder{ color:var(--field-placeholder); }
+.input-wrap input:hover{ border-color:var(--field-bd-hover); }
+.input-wrap input:focus{ border-color:var(--field-bd-focus); box-shadow:0 0 0 6px var(--field-ring); }
+
+.icon-btn{
+  position:absolute; right:8px; top:50%; transform:translateY(-50%);
+  display:inline-flex; align-items:center; justify-content:center;
+  width:36px; height:36px; border-radius:10px; border:1px solid var(--glass-bd);
+  background:var(--glass-bg); color:var(--text); cursor:pointer; backdrop-filter:blur(4px);
+}
+.icon-btn:hover{ border-color:#ffffff55; }
+
+.error-msg{ font-size:12px; color:#ff8a8a; padding:6px 2px 0; min-height:18px; }
+.field.invalid input{ border-color:#ff8484 !important; box-shadow:0 0 0 6px #ff848418 !important; }

@@ -1,0 +1,90 @@
+/* Buttons: base + variandid (ühine API .btn) */
+.btn,
+button.primary,
+button.ghost,
+.arm-btn,
+.modal-card footer .primary,
+.modal-card footer .ghost{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:var(--btn-py) var(--btn-px);
+  border-radius:var(--btn-r);
+  font-weight:var(--btn-w);
+  letter-spacing:.02em;
+  cursor:pointer; user-select:none;
+  border:1px solid transparent;
+  transition:filter .2s, transform .06s, box-shadow .2s, border-color .2s;
+}
+
+/* Primary */
+.btn--primary,
+button.primary,
+.arm-btn,
+.modal-card footer .primary{
+  background:var(--grad-primary);
+  color:#3b1300;
+  border-color:var(--btn-bd);
+  box-shadow:var(--btn-shadow), inset 0 0 0 1px rgba(255,255,255,.06);
+  text-transform:uppercase;
+}
+.btn--primary:hover,
+button.primary:hover,
+.arm-btn:hover,
+.modal-card footer .primary:hover{
+  filter:saturate(110%); transform:translateY(-1px);
+}
+.btn--primary:disabled,
+button.primary:disabled,
+.arm-btn[disabled]{ opacity:.55; cursor:not-allowed; filter:saturate(.9); }
+
+/* Ghost */
+.btn--ghost,
+button.ghost,
+.modal-card footer .ghost,
+button.ghost.small{
+  background:var(--glass-bg); color:var(--text);
+  border-color:var(--glass-bd); backdrop-filter:blur(6px);
+  box-shadow:inset 0 0 0 1px #ffffff10;
+}
+.btn--ghost:hover,
+button.ghost:hover,
+.modal-card footer .ghost:hover,
+button.ghost.small:hover{
+  filter:saturate(112%); transform:translateY(-1px); border-color:#ffffff55;
+}
+button.ghost.small{ padding:8px 10px; border-radius:10px; height:auto; font-weight:700; }
+
+.btn--sm{ padding:8px 10px; border-radius:10px; font-weight:700; }
+.btn--lg{ padding:14px 18px; border-radius:16px; }
+
+.btn:focus-visible,
+button.primary:focus-visible,
+button.ghost:focus-visible,
+.arm-btn:focus-visible,
+.spin-btn:focus-visible{
+  outline:2px solid #ffd28a; outline-offset:2px; border-radius:14px;
+}
+
+
+/* Logout nupu eristiil */
+#logoutBtn {
+  background: linear-gradient(180deg, #252f47, #1b243b);
+  color: #ffd28a;
+  border: 1px solid #ffd28a55;
+  border-radius: 12px;
+  padding: 6px 14px;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: inset 0 0 0 1px #ffffff15, 0 2px 6px rgba(0,0,0,.3);
+  transition: background .2s, transform .1s;
+}
+
+#logoutBtn:hover {
+  background: linear-gradient(180deg, #2f395a, #222b44);
+  transform: translateY(-1px);
+  border-color: #ffd28a99;
+}
+
+#logoutBtn:active {
+  transform: translateY(0);
+  background: linear-gradient(180deg, #1d243b, #161c2d);
+}

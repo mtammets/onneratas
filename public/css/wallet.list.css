@@ -1,0 +1,4 @@
+#walletList .free-card .info{ display:flex; align-items:center; gap:10px; font-weight:800; color:var(--text); }
+#walletList .free-card .wallet-name{ color:var(--text); }
+#walletList .free-card i{ flex:0 0 auto; }
+#walletList .free-card:hover{ border-color:#ffffff44; box-shadow: var(--card-hover-shadow); }

@@ -1,0 +1,55 @@
+*{box-sizing:border-box}
+html,body{}
+body{
+  margin:0; color:var(--text);
+  font-family:ui-sans-serif, system-ui, -apple-system,"SF Pro","Inter",Arial;
+  background:
+    radial-gradient(1200px 800px at 50% -20%, #ff7a1a22, transparent 60%),
+    radial-gradient(800px 600px at 30% 120%, #ff3c8a15, transparent 60%),
+    linear-gradient(180deg, #0a0d17, #0e1222 40%, #0b0f1a);
+  min-height:var(--vh);
+}
+
+/* iOS: väldi input-fookusel automaatset suumimist */
+input, textarea, select { font-size:16px; }
+
+/* A11y utiliidid */
+.sr-only{
+  position:absolute!important; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+
+/* Üldised utiliidid */
+.hidden{display:none !important;}
+.small{font-size:12px}
+
+
+/* === Auth visibility =====================================================
+   Kui kasutaja EI ole sisse loginud, näita ainult õnneratast.
+   Kõik "ratta all" vidinad (võidud, tasuta keerutused, rahakott) peidame.
+   JS lisab/ebaliseltab <body class="logged-in"> vastavalt auth olekule.
+==========================================================================*/
+body:not(.logged-in) [data-auth-only],
+body:not(.logged-in) #myPrizesBtn,
+body:not(.logged-in) #walletModal,
+body:not(.logged-in) #freeMeter {
+  display: none !important;
+}
+
+/* Jäta ratas keskmesse ka siis, kui kõrvalelemendid on kadunud */
+body:not(.logged-in) .wheel-wrap,
+body:not(.logged-in) #rotor,
+body:not(.logged-in) #wheel,
+body:not(.logged-in) .axle {
+  
+}
+
+/* keelab double-tap zoomi rattal ja spin-nupul */
+.wheel-wrap,
+#rotor,
+#wheel,
+#spinBtn {
+  touch-action: manipulation;
+  -webkit-user-select: none; /* iOS Safari */
+}
+

@@ -18,14 +18,8 @@ function pickSlice() {
     };
 }
 
-
-
-function cubicOut(t) {
-    return 1 - Math.pow(1 - t, 3);
-}
-function easeInQuad(t) {
-    return t * t;
-}
+function cubicOut(t) { return 1 - Math.pow(1 - t, 3); }
+function easeInQuad(t) { return t * t; }
 
 /* Abi: kraadide normaliseerimine [0..360) */
 function wrapDeg(deg) {
@@ -36,10 +30,8 @@ function spin() {
     const isArmed = (typeof window.isFreeSpinArmed === 'function') ? window.isFreeSpinArmed() : false;
     if (spinning || !hasFreeSpin() || !isArmed) return;
 
-    freeSpinTag.hidden = !hasFreeSpin();
-
-
-
+    const armed = (typeof window.isFreeSpinArmed === 'function') ? window.isFreeSpinArmed() : false;
+    freeSpinTag.hidden = !armed;
 
 
     // ——— Värvipõhine siht ———
@@ -64,7 +56,8 @@ function spin() {
     const beginDeg = angleDeg;
 
     spinning = true;
-    spinBtn.disabled = true;
+    // ⬇️ ÄRA kasuta disabled – ainult visuaalne lukustus
+    spinBtn?.classList.add('locked');
 
     const tick = makeTickPlayer(n);
 
@@ -123,11 +116,15 @@ function spin() {
                     if (typeof window.disarmFreeSpin === 'function') window.disarmFreeSpin();
 
                     // UI sildid ja meetrid
-                    freeSpinTag.hidden = !hasFreeSpin();
+                    const armed = (typeof window.isFreeSpinArmed === 'function') ? window.isFreeSpinArmed() : false;
+                    freeSpinTag.hidden = !armed;
+
                     updateMeter();
 
                     const stillArmed = (typeof window.isFreeSpinArmed === 'function') ? window.isFreeSpinArmed() : false;
-                    spinBtn.disabled = !stillArmed;
+
+                    // ⬇️ ÄRA kasuta disabled – ainult visuaalne lukustus, kui enam pole relvastatud
+                    spinBtn?.classList.toggle('locked', !stillArmed);
 
                     // LÕPP: anna edasi VÕIT (värv)
                     onStop(win);

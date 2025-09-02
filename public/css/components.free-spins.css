@@ -1,0 +1,10 @@
+.free-list{display:grid; gap:10px}
+.free-card .info{display:flex; align-items:center; gap:10px; font-weight:800}
+
+/* AKTIVEERI nupp (kasutab .btn reegleid) */
+.arm-btn{}
+
+.free-card.armed{outline:2px solid #33d17a66; outline-offset:2px}
+.free-card.armed .arm-btn{
+  background:linear-gradient(180deg,#2a3857,#19243b); color:#eef2ff; border-color:#ffffff44;
+}

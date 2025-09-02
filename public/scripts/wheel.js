@@ -13,11 +13,11 @@
 const SECTOR_CONFIG_BY_ID = {
     "sec-1": { color: "#ffd166", icon: "fa-crown", name: "MASSAAS" },
     "sec-2": { color: "#62d394", icon: "fa-leaf", name: "KAMMIMINE" },
-    "sec-3": { color: "#ffa366", icon: "fa-mug-hot", name: "HOMMIKUKOHV" },
-    "sec-4": { color: "#9cd7ff", icon: "fa-gem", name: "KOMPLIMENDID" },
+    "sec-3": { color: "#ffa366", icon: "fa-mug-hot", name: "KOHV" },
+    "sec-4": { color: "#9cd7ff", icon: "fa-gem", name: "SHOPPAMINE" },
     "sec-5": { color: "#a881e6", icon: "fa-star", name: "FILMIÕHTU" },
     "sec-6": { color: "#5aa7f9", icon: "fa-utensils", name: "ÕHTUSÖÖK" },
-    "sec-7": { color: "#f7a1c0", icon: "fa-heart", name: "SUUDLUS" },
+    "sec-7": { color: "#f7a1c0", icon: "fa-heart", name: "SOOV" },
     "sec-8": { color: "#c9cbd1", icon: "fa-moon", name: "JALUTUSKÄIK" }
 };
 

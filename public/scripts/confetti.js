@@ -4,6 +4,9 @@
 let confettiPieces = [];
 
 function blastConfetti() {
+    // 🔔 anna märku, et konfeti algas
+    document.dispatchEvent(new CustomEvent('confetti:start'));
+
     const dpr = devicePixelRatio || 1;
 
     confetti.width = innerWidth * dpr;

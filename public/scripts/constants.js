@@ -22,7 +22,7 @@ const WHEEL_SLICES = [
 ];
 
 /* Tasuta keerutused + animatsioon */
-const FREE_SPINS_PER_DAY = 25;
+const FREE_SPINS_PER_DAY = 45;
 const SPIN_TURNS_BASE = 6.5;
 const SPIN_TURNS_RANDOM = 6.5;
 const SPIN_MS_BASE = 10500;

@@ -1,0 +1,27 @@
+/* Teema & mõõdud (globaalne) */
+:root{
+  --bg:#0b0f1a; --panel:#0f1424cc; --text:#eef2ff; --muted:#a7b1d6;
+  --primary:#ff6f3c; --accent:#ffcf33; --vh:100vh;
+  --radius:18px; --shadow:0 10px 30px rgba(0,0,0,.35);
+
+  /* Vormid */
+  --field-bg:transparent; --field-bd:#ffffff26; --field-bd-hover:#ffffff3a;
+  --field-bd-focus:#ffd28a66; --field-ring:#ffd28a18; --field-placeholder:#a7b1d699;
+  --form-max:340px; --ctrl-h:52px;
+
+  /* Ühtne komponentide disain */
+  --btn-py:10px; --btn-px:14px; --btn-r:14px; --btn-w:800;
+  --btn-shadow:0 8px 20px rgba(255,138,58,.28);
+  --card-r:14px; --card-bg:linear-gradient(180deg,#121a31,#0e152b);
+  --card-bd:1px solid #ffffff26; --card-shadow:0 8px 24px rgba(0,0,0,.32);
+
+  /* Korduste vähendamiseks */
+  --grad-primary: linear-gradient(180deg,#ffd28a,#ff8a3a);
+  --glass-bg: #ffffff12;
+  --glass-bd: #ffffff33;
+  --btn-bd: #ffb96455;
+  --card-hover-shadow: 0 12px 28px rgba(0,0,0,.36), inset 0 0 0 1px #ffffff18;
+
+  /* Modaalide maks-laius (desktopi cap) */
+  --modal-max:560px;
+}

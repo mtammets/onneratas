@@ -1,0 +1,79 @@
+/* <dialog> overlay & kaart */
+.modal{ border:none; padding:0; background:transparent; }
+.modal[open]::backdrop{
+  background: radial-gradient(1000px 420px at 50% -10%, #0009, #000d);
+  backdrop-filter: blur(2px);
+}
+/* Kui mõni modal on avatud, ära luba taustal kerida */
+body:has(dialog[open]){ overflow:hidden; }
+
+/* Kaart ise – mobiilis 90vw, kõrgus piiratud 100dvh (iOS sõbralik) */
+.modal-card{
+  position:relative;
+  width: clamp(320px, 90vw, var(--modal-max));
+  
+  max-height: calc(100dvh - 24px);      /* ✅ ei lähe ekraanist välja */
+  margin:12px auto;                      /* väike õhk ümberringi */
+  padding:22px 20px;
+  border-radius:20px;
+  background: linear-gradient(180deg, #141b31ee, #0c1227f2);
+  border:1px solid #ffffff26;
+  box-shadow: 0 22px 90px rgba(0,0,0,.72), inset 0 0 48px rgba(0,0,0,.5);
+
+  display:grid;                          /* ✅ jagame read: header | body | footer */
+  grid-template-rows: auto minmax(0,1fr) auto;
+  overflow:hidden;                        /* klipib sisevarjud; body kerib eraldi */
+}
+.modal-card::before{
+  content:"";
+  position:absolute; inset:-1px -1px auto -1px; height:120px;
+  border-radius:inherit; pointer-events:none;
+  background: radial-gradient(520px 140px at 50% 0, #ff9f3c29, transparent 60%);
+}
+
+/* data-size suurused: <dialog class="modal" data-size="lg"> */
+.modal[data-size="sm"]{ --modal-max: 420px; }
+.modal[data-size="md"]{ --modal-max: 560px; }
+.modal[data-size="lg"]{ --modal-max: 720px; }
+.modal[data-size="xl"]{ --modal-max: 960px; }
+
+/* Päis, sisu, jalus */
+.modal-card header h3{
+  margin:0 0 10px; text-align:center;
+  font-weight:900; font-size:20px; letter-spacing:.01em; color:#ffcf33;
+}
+.modal-card header{ grid-row:1; }
+.modal-body{
+  grid-row:2;
+  min-height:0;                          /* ✅ kriitiline flex/grid puhul */
+  overflow-y:auto;                       /* ✅ kerib ainult sisu */
+  -webkit-overflow-scrolling: touch;     /* iOS momentum scroll */
+  display:grid; gap:14px; text-align:center;
+  padding-right:6px;                     /* ruum scrollbarile */
+}
+.modal-card footer{
+  grid-row:3;
+  display:flex; justify-content:center; gap:14px; margin-top:14px;
+}
+.muted{color:var(--muted)}
+
+/* Ühtne sisenemisanimatsioon */
+.modal[open] .modal-card{ animation:modalIn .22s ease-out both; }
+@keyframes modalIn{
+  from{opacity:0; transform:translateY(-6px) scale(.985)}
+  to{opacity:1; transform:translateY(0) scale(1)}
+}
+
+/* Fallback overlay div (kui ei kasuta <dialog>) */
+.modal-overlay {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.6); z-index: 999;
+}
+
+/* Väikestel ekraanidel mugavam spacing ja nuppude kuhjamine */
+@media (max-width: 380px){
+  .modal-card{ padding:18px 16px; }
+  .modal-card footer{ flex-wrap:wrap; gap:10px; }
+  .modal-card footer > *{ flex:1 1 140px; }
+}

@@ -4,7 +4,9 @@ import {
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
     updateProfile,
-    sendEmailVerification
+    sendEmailVerification,
+    onAuthStateChanged,
+    signOut
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 
 (function () {
@@ -117,13 +119,32 @@ import {
         } catch (err) {
             const code = err?.code || '';
             if (code === 'auth/email-already-in-use' || code === 'auth/invalid-email') {
-                setErr(email, document.getElementById('suEmailErr'), code === 'auth/email-already-in-use' ? 'See e-post on juba kasutusel.' : 'E-posti formaat on vale.');
+                setErr(email, document.getElementById('suEmailErr'),
+                    code === 'auth/email-already-in-use' ? 'See e-post on juba kasutusel.' : 'E-posti formaat on vale.');
             } else {
-                setErr(pass, document.getElementById('suPassErr'), code === 'auth/weak-password' ? 'Parool peab olema vähemalt 6 märki.' : 'Midagi läks valesti. Proovi uuesti.');
+                setErr(pass, document.getElementById('suPassErr'),
+                    code === 'auth/weak-password' ? 'Parool peab olema vähemalt 6 märki.' : 'Midagi läks valesti. Proovi uuesti.');
             }
         } finally {
             btn.disabled = false; btn.textContent = orig;
         }
+    });
+
+    // --- AUTH OLEKU JÄLGIMINE JA ÜLEMINE RIBA ---
+    const loginBtn = document.getElementById('loginBtn');   // olemasolev nupp topbaris
+    const userArea = document.getElementById('userArea');   // lisa index.html-i
+    const userNameEl = document.getElementById('userName');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    onAuthStateChanged(auth, (user) => {
+        const loggedIn = !!user;
+        if (loginBtn) loginBtn.style.display = loggedIn ? 'none' : 'inline-flex';
+        if (userArea) userArea.style.display = loggedIn ? 'inline-flex' : 'none';
+        if (userNameEl) userNameEl.textContent = loggedIn ? (user.displayName || user.email || 'Kasutaja') : '';
+    });
+
+    logoutBtn?.addEventListener('click', async () => {
+        try { await signOut(auth); } catch (_) { /* soovi korral teavitus */ }
     });
 
     dlg.addEventListener('close', () => showPane('login'));
