@@ -66,3 +66,12 @@ onAuthStateChanged(auth, (user) => {
 document.getElementById("logoutBtn")?.addEventListener("click", async () => {
   await signOut(auth);
 });
+
+
+
+
+
+
+
+//screensaver
+

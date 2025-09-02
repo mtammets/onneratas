@@ -38,6 +38,10 @@ function spin() {
 
     freeSpinTag.hidden = !hasFreeSpin();
 
+
+
+
+
     // ——— Värvipõhine siht ———
     const n = WHEEL_SLICES.length;
     const stepDeg = 360 / n;
