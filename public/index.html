@@ -88,17 +88,34 @@
         <main class="stage">
             <!-- Wheel -->
             <!-- Wheel -->
-            <div class="wheel-wrap" aria-live="polite">
+            <div class="wheel-wrap show-gif" aria-live="polite">
+
                 <div id="rotor" class="rotor">
                     <canvas id="wheel" aria-label="Õnneratas"></canvas>
                     <ul class="bulbs" id="bulbs" aria-hidden="true"></ul>
                 </div>
 
+
                 <div class="axle">
+                    <!-- 🟡 Kesk-GIF -->
+
+                    <img class="center-gif" src="/gifs/sapo.gif" alt="Kesk GIF" />
+
                     <button id="spinBtn" class="spin-btn" type="button" aria-label="Alusta keerutust">
                         <span id="freeSpinTag" class="spin-sub" hidden>START</span>
                     </button>
                 </div>
+
+                <!-- ✅ UUS: võiduteksti “casino blast” kiht -->
+                <div id="winBlast" class="win-blast" aria-live="assertive" hidden>
+                    <div class="blast-ring"></div>
+                    <div class="blast-text">
+                        <i id="winBlastIcon" class="fa-solid fa-gift" aria-hidden="true"></i>
+                        <span id="winBlastName">VÕIT</span>
+                    </div>
+                </div>
+
+
 
                 <div class="pointer" aria-hidden="true"></div>
             </div>

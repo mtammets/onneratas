@@ -21,8 +21,22 @@ const WHEEL_SLICES = [
   { color: '#ffd28a', label: 'Kollane' }
 ];
 
+/* Config */
+const SECTOR_CONFIG_BY_ID = {
+  "sec-1": { color: "#ffd166", icon: "fa-crown", name: "MASSAAŽ" },
+  "sec-2": { color: "#62d394", icon: "fa-leaf", name: "SOENG" },
+  "sec-3": { color: "#ffa366", icon: "fa-mug-hot", name: "PEAMASSAAŽ" },
+  "sec-4": { color: "#9cd7ff", icon: "fa-gem", name: "MUINASJUTT" },
+  "sec-5": { color: "#a881e6", icon: "fa-star", name: "ÕLAMASSAAŽ" },
+  "sec-6": { color: "#5aa7f9", icon: "fa-utensils", name: "ÕHTUSÖÖK" },
+  "sec-7": { color: "#f7a1c0", icon: "fa-heart", name: "SOOV" },
+  "sec-8": { color: "#c9cbd1", icon: "fa-moon", name: "JALAMASSAAŽ" }
+};
+
+const DEFAULT_SECTOR_STYLE = { color: "#ffd28a", icon: "fa-gift" };
+
 /* Tasuta keerutused + animatsioon */
-const FREE_SPINS_PER_DAY = 50;
+const FREE_SPINS_PER_DAY = 69;
 const SPIN_TURNS_BASE = 6.5;
 const SPIN_TURNS_RANDOM = 6.5;
 const SPIN_MS_BASE = 10500;
