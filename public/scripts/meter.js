@@ -1,6 +1,6 @@
 /* “Meter” UI (tasuta keerutused → kaardid + AKTIVEERI) */
 let meterTimer = null;
-let lastHadFree = null;
+let lastHadFree = null; // Pane false, kui soovid toasti ka esimesel laadimisel, kui has===true
 let freeSpinArmed = false;   // kas vähemalt üks kaart on aktiveeritud
 
 const $id = (id) => document.getElementById(id);
@@ -48,7 +48,7 @@ let activateAudio;
 function playActivate() {
     try {
         if (!activateAudio) {
-            activateAudio = new Audio('sounds/activate_click.mp3'); // suhteline juurest
+            activateAudio = new Audio('sounds/activate_click.mp3');
             activateAudio.preload = 'auto';
         }
         activateAudio.currentTime = 0;
@@ -60,8 +60,33 @@ function playActivate() {
 window.isFreeSpinArmed = () => !!freeSpinArmed;
 window.disarmFreeSpin = () => { freeSpinArmed = false; updateMeter(); };
 
-/* Joonista kaardid ja aktiveerimise loogika */
-function renderFreeCards(left) {
+/* Abifunktsioon: aktiveeri just see kaart */
+function armCard(list, card, btn, { clearGifOnArm }) {
+    // tühista muud aktivatsioonid
+    [...list.querySelectorAll('.free-card')].forEach(c => {
+        c.classList.remove('armed');
+        const b = c.querySelector('.arm-btn');
+        if (b) { b.disabled = false; b.textContent = 'AKTIVEERI'; }
+    });
+    // märgi see kaart aktiveerituks
+    card.classList.add('armed');
+    btn.disabled = true;
+    btn.textContent = 'AKTIVEERITUD';
+    freeSpinArmed = true;
+
+    if (clearGifOnArm) {
+        const wrap = $qs('.wheel-wrap');
+        wrap?.classList.remove('show-gif');
+        const gif = $id('centerGif');
+        if (gif) gif.removeAttribute('src');
+    }
+
+    // Üks allikas tõele: lase UI sünkrol joosta updateMeteris
+    updateMeter();
+}
+
+/* Joonista kaardid ja aktiveerimise loogika (üks ja ainus versioon) */
+function renderFreeCards(left, { clearGifOnArm = true } = {}) {
     const list = $id('freeList'); if (!list) return;
     list.innerHTML = '';
 
@@ -79,30 +104,12 @@ function renderFreeCards(left) {
         btn.type = 'button';
         btn.textContent = 'AKTIVEERI';
 
-        // heli kohe allavajutusel (väike latentsus, user gesture olemas)
         btn.addEventListener('pointerdown', () => {
             if (!btn.disabled) playActivate();
         });
 
-        // aktivatsiooni loogika
         btn.addEventListener('click', () => {
-            // tühista muud aktivatsioonid
-            [...list.querySelectorAll('.free-card')].forEach(c => {
-                c.classList.remove('armed');
-                const b = c.querySelector('.arm-btn');
-                if (b) { b.disabled = false; b.textContent = 'AKTIVEERI'; }
-            });
-            // märgi see kaart aktiveerituks
-            card.classList.add('armed');
-            btn.disabled = true;
-            btn.textContent = 'AKTIVEERITUD';
-            freeSpinArmed = true;
-
-            // luba spin nupp + visuaalne “aktiivne ratas”
-            const spinBtn = $id('spinBtn'); if (spinBtn) spinBtn.disabled = false;
-            const wrap = $qs('.wheel-wrap');
-            wrap?.classList.add('wheel-active');
-            if (typeof drawStaticWheel === 'function') drawStaticWheel();
+            armCard(list, card, btn, { clearGifOnArm });
         });
 
         card.appendChild(info);
@@ -111,7 +118,7 @@ function renderFreeCards(left) {
     }
 }
 
-/** Peafunktsioon */
+/** Peafunktsioon — ainus koht, kus synchitakse UI (klassid, nupud, tekstid) */
 function updateMeter() {
     if (typeof spinsLeftToday !== 'function' || typeof FREE_SPINS_PER_DAY === 'undefined') return;
 
@@ -124,99 +131,41 @@ function updateMeter() {
     const spinBtn = $id('spinBtn');
     const wrap = $qs('.wheel-wrap');
 
-    // vaikimisi lukus (kuni aktiveeritakse)
-    if (spinBtn) spinBtn.disabled = !freeSpinArmed;
-
+    // Klassid meterile
     if (meterEl) {
         meterEl.classList.toggle('meter--empty', !has);
         meterEl.classList.toggle('meter--has', has);
     }
 
     if (has) {
+        // Kaardid joonistab iga kord uuesti, et loendur “left” peegeldaks tõde
         renderFreeCards(left);
-        nextFreeInfo && (nextFreeInfo.textContent = '');
+        if (nextFreeInfo) nextFreeInfo.textContent = '';
     } else {
-        freeList && (freeList.innerHTML = '');
-        freeSpinArmed = false;
-        spinBtn && (spinBtn.disabled = true);
-        wrap?.classList.remove('wheel-active');
-        nextFreeInfo && (nextFreeInfo.textContent =
-            `Uue tasuta keerutuseni jäänud: ${safeFormatHMS(safeMsToMidnight())} `);
+        if (freeList) freeList.innerHTML = '';
+        freeSpinArmed = false; // kui tasuta pole, siis pole ka “relvastatud”
+        if (nextFreeInfo) nextFreeInfo.textContent =
+            `Uus tasuta keerutus: ${safeFormatHMS(safeMsToMidnight())} pärast`;
     }
+
+    // Keskne tõde: spin-nupu lubamine ainult juhul, kui on kaart relvastatud
+    if (spinBtn) spinBtn.disabled = !freeSpinArmed;
+
+    // Ratta visuaalne olek ainult siin
+    wrap?.classList.toggle('wheel-active', freeSpinArmed);
 
     // countdown ainult siis, kui tasuta puudub
     if (meterTimer) clearInterval(meterTimer);
     if (!has) {
         meterTimer = setInterval(() => {
-            nextFreeInfo && (nextFreeInfo.textContent =
-                `Uus tasuta keerutus: ${safeFormatHMS(safeMsToMidnight())} pärast`);
-            if (safeMsToMidnight() <= 1000) updateMeter();
+            const ms = safeMsToMidnight();
+            if (nextFreeInfo) nextFreeInfo.textContent =
+                `Uus tasuta keerutus: ${safeFormatHMS(ms)} pärast`;
+            if (ms <= 1000) updateMeter();
         }, 1000);
     }
 
     // Toast 0 → >0
     if (lastHadFree === false && has) showFreeToast(left);
     lastHadFree = has;
-
-    // sünkroniseeri canvas-glow klassiga
-    wrap?.classList.toggle('wheel-active', freeSpinArmed);
 }
-/* ... olemasolev algus jääb samaks ... */
-
-/* Joonista kaardid ja aktiveerimise loogika */
-function renderFreeCards(left) {
-    const list = $id('freeList'); if (!list) return;
-    list.innerHTML = '';
-
-    for (let i = 0; i < left; i++) {
-        const card = document.createElement('div');
-        card.className = 'free-card';
-
-        const info = document.createElement('div');
-        info.className = 'info';
-        info.innerHTML = `<span class="dot" aria-hidden="true"></span>
-                      <span>Tasuta keerutus</span>`;
-
-        const btn = document.createElement('button');
-        btn.className = 'arm-btn';
-        btn.type = 'button';
-        btn.textContent = 'AKTIVEERI';
-
-        btn.addEventListener('pointerdown', () => {
-            if (!btn.disabled) playActivate();
-        });
-
-        // aktivatsiooni loogika
-        btn.addEventListener('click', () => {
-            // tühista muud aktivatsioonid
-            [...list.querySelectorAll('.free-card')].forEach(c => {
-                c.classList.remove('armed');
-                const b = c.querySelector('.arm-btn');
-                if (b) { b.disabled = false; b.textContent = 'AKTIVEERI'; }
-            });
-            // märgi see kaart aktiveerituks
-            card.classList.add('armed');
-            btn.disabled = true;
-            btn.textContent = 'AKTIVEERITUD';
-            freeSpinArmed = true;
-
-            // luba spin nupp + visuaalne “aktiivne ratas”
-            const spinBtn = $id('spinBtn'); if (spinBtn) spinBtn.disabled = false;
-            const wrap = $qs('.wheel-wrap');
-            wrap?.classList.add('wheel-active');
-
-            // ⬇️ puhasta eelmise võidu GIF (kui oli)
-            wrap?.classList.remove('show-gif');
-            const gif = document.getElementById('centerGif');
-            if (gif) gif.removeAttribute('src');
-
-            if (typeof drawStaticWheel === 'function') drawStaticWheel();
-        });
-
-        card.appendChild(info);
-        card.appendChild(btn);
-        list.appendChild(card);
-    }
-}
-
-/* ülejäänud meter.js (updateMeter jne) jääb muutmata */
