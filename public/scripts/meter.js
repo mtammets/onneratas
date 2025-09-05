@@ -145,7 +145,7 @@ function updateMeter() {
         if (freeList) freeList.innerHTML = '';
         freeSpinArmed = false; // kui tasuta pole, siis pole ka “relvastatud”
         if (nextFreeInfo) nextFreeInfo.textContent =
-            `Uus tasuta keerutus: ${safeFormatHMS(safeMsToMidnight())} pärast`;
+            `Järgmise keerutuseni jäänud: ${safeFormatHMS(safeMsToMidnight())} `;
     }
 
     // Keskne tõde: spin-nupu lubamine ainult juhul, kui on kaart relvastatud
