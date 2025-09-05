@@ -141,7 +141,7 @@ function updateMeter() {
         spinBtn && (spinBtn.disabled = true);
         wrap?.classList.remove('wheel-active');
         nextFreeInfo && (nextFreeInfo.textContent =
-            `Uus tasuta keerutus: ${safeFormatHMS(safeMsToMidnight())} pärast`);
+            `Uue tasuta keerutuseni jäänud: ${safeFormatHMS(safeMsToMidnight())} `);
     }
 
     // countdown ainult siis, kui tasuta puudub
