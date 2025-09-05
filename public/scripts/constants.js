@@ -36,7 +36,7 @@ const SECTOR_CONFIG_BY_ID = {
 const DEFAULT_SECTOR_STYLE = { color: "#ffd28a", icon: "fa-gift" };
 
 /* Tasuta keerutused + animatsioon */
-const FREE_SPINS_PER_DAY = 69;
+const FREE_SPINS_PER_DAY = 1;
 const SPIN_TURNS_BASE = 6.5;
 const SPIN_TURNS_RANDOM = 6.5;
 const SPIN_MS_BASE = 10500;
