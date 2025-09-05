@@ -113,34 +113,38 @@
 }
 
 
-/* === KASIINO WIN FX =================================================== */
+/* === KASIINO WIN FX (clean) =========================================== */
 :root{ --fx:#ffd28a; }                /* värv muudetakse JS-ist sektorivärviks */
 
-.win-blast{
-  position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; z-index:6;
+/* Ekraani välk + kaamera shake – overlay kasutab seda endiselt */
+.screen-flash{
+  position:fixed; inset:0; background:radial-gradient(closest-side, #fff, transparent 65%);
+  opacity:0; pointer-events:none; z-index:9999;
 }
-.win-blast[hidden]{ display:none !important; }
+.screen-flash.flash-in{ animation:screenFlash .28s ease-out forwards; }
 
-/* ŠOKILAINe ring */
-.blast-shockwave{
-  position:absolute; width:26%; aspect-ratio:1/1; border-radius:50%;
-  border:2px solid var(--fx); box-shadow:0 0 40px var(--fx);
-  opacity:0; transform:scale(.4);
+.wheel-wrap.shake{ animation:shake .6s cubic-bezier(.19,1,.22,1); }
+
+/* Pirnide stroboskoop + pointeri välk – overlay jätab need alles */
+.bulbs.strobe li{ animation-duration:.34s !important; }
+.pointer.flash{ filter:drop-shadow(0 0 22px var(--fx)); }
+
+/* Vajalikud keyframe’id, mida overlay/flash kasutab */
+@keyframes screenFlash{ 0%{opacity:.9} 100%{opacity:0} }
+@keyframes shake{
+  0%,100%{ transform:translate3d(0,0,0) }
+  15%{ transform:translate3d(1.5px,-1.5px,0) rotate(.2deg) }
+  30%{ transform:translate3d(-1px,1.5px,0) rotate(-.2deg) }
+  45%{ transform:translate3d(1px,1px,0) }
+  60%{ transform:translate3d(-1.5px,-1px,0) }
+  75%{ transform:translate3d(.8px,-.8px,0) }
 }
 
-/* Kiirtevihk (radiaalne gradient + pöörlemine) */
-.blast-rays{
-  position:absolute; width:140%; height:140%; opacity:.85; mix-blend-mode:screen;
-  background:
-    radial-gradient(closest-side, rgba(255,255,255,.09), transparent 60%),
-    conic-gradient(from 0deg,
-      rgba(255,210,138,.45) 0 5deg, transparent 5deg 15deg) ;
-  filter:blur(0.4px) saturate(1.1);
-  mask:radial-gradient(circle at 50% 50%, transparent 0 18%, #000 19%);
-  transform:rotate(0deg) scale(0.98);
-  pointer-events:none;
-  opacity:0;
+/* Motion-sõbralik */
+@media (prefers-reduced-motion: reduce){
+  .wheel-wrap.shake{ animation:none !important; }
 }
+
 
 /* Sädemeid */
 .blast-sparkles{ position:absolute; inset:0; }
@@ -200,6 +204,24 @@
   60%{ transform:translate3d(-1.5px,-1px,0) }
   75%{ transform:translate3d(.8px,-.8px,0) }
 }
+
+@keyframes fadeOutSlow {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(.95); }
+}
+
+/* 3s järel algatatav pehme hajumine */
+.win-blast.fade-after .blast-text {
+  animation: fadeOutSlow 1.2s ease forwards;
+}
+
+/* (Valikuline) hajuta ka teised kihid samal ajal */
+.win-blast.fade-after .blast-rays,
+.win-blast.fade-after .blast-shockwave,
+.win-blast.fade-after .blast-sparkles i {
+  animation: fadeSoft .8s ease forwards;
+}
+
 
 /* Sisse/välja klassid */
 .win-blast.is-in .blast-shockwave{ animation:shock .6s ease-out both; }
