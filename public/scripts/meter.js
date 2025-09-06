@@ -2,6 +2,7 @@
 let meterTimer = null;
 let lastHadFree = null; // Pane false, kui soovid toasti ka esimesel laadimisel, kui has===true
 let freeSpinArmed = false;   // kas vähemalt üks kaart on aktiveeritud
+let armedCardIndex = null;   // milline kaart on parasjagu "relvastatud" (püsib üle renderduste)
 
 const $id = (id) => document.getElementById(id);
 const $qs = (sel) => document.querySelector(sel);
@@ -58,20 +59,39 @@ function playActivate() {
 
 /* Globaalne API teistele failidele */
 window.isFreeSpinArmed = () => !!freeSpinArmed;
-window.disarmFreeSpin = () => { freeSpinArmed = false; updateMeter(); };
+window.disarmFreeSpin = () => {
+    freeSpinArmed = false;
+    armedCardIndex = null;
+    updateMeter();
+};
 
-/* Abifunktsioon: aktiveeri just see kaart */
-function armCard(list, card, btn, { clearGifOnArm }) {
-    // tühista muud aktivatsioonid
-    [...list.querySelectorAll('.free-card')].forEach(c => {
+/* Abifunktsioon: aktiveeri/DEaktiveeri (toggle) just see kaart */
+function armCard(list, card, btn, { clearGifOnArm, index }) {
+    // Kui klikiti juba relvastatud kaardil → togglena OFF
+    if (armedCardIndex === index) {
+        armedCardIndex = null;
+        freeSpinArmed = false;
+        updateMeter();
+        return;
+    }
+
+    // Tühista muud aktivatsioonid (UI)
+    [...list.querySelectorAll('.free-card')].forEach((c) => {
         c.classList.remove('armed');
         const b = c.querySelector('.arm-btn');
-        if (b) { b.disabled = false; b.textContent = 'AKTIVEERI'; }
+        if (b) {
+            b.classList.remove('is-armed');
+            b.setAttribute('aria-pressed', 'false');
+            b.textContent = 'AKTIVEERI';
+        }
     });
-    // märgi see kaart aktiveerituks
+
+    // Märgi see kaart aktiveerituks (toggle ON)
     card.classList.add('armed');
-    btn.disabled = true;
+    btn.classList.add('is-armed');
+    btn.setAttribute('aria-pressed', 'true');
     btn.textContent = 'AKTIVEERITUD';
+    armedCardIndex = index;
     freeSpinArmed = true;
 
     if (clearGifOnArm) {
@@ -102,14 +122,25 @@ function renderFreeCards(left, { clearGifOnArm = true } = {}) {
         const btn = document.createElement('button');
         btn.className = 'arm-btn';
         btn.type = 'button';
-        btn.textContent = 'AKTIVEERI';
+
+        // Taasta olek vastavalt armedCardIndex'ile
+        const isArmed = (armedCardIndex === i);
+        if (isArmed) {
+            card.classList.add('armed');
+            btn.classList.add('is-armed');
+            btn.setAttribute('aria-pressed', 'true');
+            btn.textContent = 'AKTIVEERITUD';
+        } else {
+            btn.setAttribute('aria-pressed', 'false');
+            btn.textContent = 'AKTIVEERI';
+        }
 
         btn.addEventListener('pointerdown', () => {
-            if (!btn.disabled) playActivate();
+            playActivate();
         });
 
         btn.addEventListener('click', () => {
-            armCard(list, card, btn, { clearGifOnArm });
+            armCard(list, card, btn, { clearGifOnArm, index: i });
         });
 
         card.appendChild(info);
@@ -143,7 +174,8 @@ function updateMeter() {
         if (nextFreeInfo) nextFreeInfo.textContent = '';
     } else {
         if (freeList) freeList.innerHTML = '';
-        freeSpinArmed = false; // kui tasuta pole, siis pole ka “relvastatud”
+        freeSpinArmed = false;           // kui tasuta pole, siis pole ka “relvastatud”
+        armedCardIndex = null;           // ja ka indeks nulli
         if (nextFreeInfo) nextFreeInfo.textContent =
             `Järgmise keerutuseni jäänud: ${safeFormatHMS(safeMsToMidnight())} `;
     }
